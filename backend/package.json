@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
+    "mysql2": "^2.3.3",
     "nodeman": "^1.1.2"
   }
 }
