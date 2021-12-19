@@ -3,6 +3,39 @@ const db = require('../database');
 
 router = Router();
 
+// This route deletes a user from the database using the given id
+router.delete('/:id', async (req, res) => {
+    const id  = parseInt(req.params.id);
+    if(id >= 0){
+        user = (await db.promise().query(`SELECT * FROM USERS WHERE id = ${id}`))[0];
+        if(user.length == 1){
+            db.promise().query(`DELETE FROM USERS WHERE id = ${id}`);
+            res.json({'msg': 'Successfully deleted user '+ user[0].username});
+        }else{
+            res.json({'msg': 'User not found for ID ' + id});
+        }
+    }else{
+        res.json({'msg': 'The ID is invalid.'});
+    }
+});
+
+// This route deletes users with ID's greater than the given ID
+router.delete('/delete-greater/:id', async (req, res) => {
+    const id  = parseInt(req.params.id);
+    if(id >= 0){
+        try {
+            db.promise().query(`DELETE FROM USERS WHERE id >= ${id}`);
+            res.json({'msg': 'Successfully deleted'});
+        } catch (err) {
+            console.log(err);
+            res.json({'msg': err.message});
+        } 
+    }else{
+        res.json({'msg': 'The ID is invalid.'});
+    }
+});
+
+
 // This route, when called, will return the list of the all the users in the database
 router.get('/list', async (req, res) => {
     try {
