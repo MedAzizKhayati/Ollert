@@ -20,11 +20,35 @@ const initialQueries = () => {
             password VARCHAR(255) NOT NULL,
             first_name VARCHAR(255),
             last_name VARCHAR(255),
-            ROLE VARCHAR(50),
-            PICTURE VARCHAR(255),
+            role VARCHAR(50) check (ROLE in ('CHEF', 'MEMBRE')) ,
+            picture VARCHAR(255),
             PRIMARY KEY(id)
         )`
     );
+    
+    db.promise().query(`
+        CREATE TABLE IF NOT EXISTS projects (
+            id int AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(255) NOT NULL,
+            description TEXT,
+            deadline DATE,
+            id_project_manager int references users
+        )
+    `);
+    db.promise().query(`
+        CREATE TABLE IF NOT EXISTS tasks(
+            id int AUTO_INCREMENT PRIMARY KEY,
+            state VARCHAR(255) Check(state in ('TODO','DOING','DONE')),
+            title VARCHAR(255) NOT NULL,
+            description TEXT ,
+            deadline DATE ,
+            id_project int NOT NULL references projects ,
+            id_user int references users 
+        )
+    `
+    );
+    
     // EXAMPLE: I figured that the users table needs to be dropped,
     // let's not delete the above query, but rather add this query 
     /* db.query(`DROP TABLE USERS`); */
