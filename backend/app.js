@@ -1,31 +1,43 @@
 /* LIBRARIES */
 const express = require('express');
+const session = require('express-session');
 //NOTE: Add external libraries here...
 
 /* \LIBRARIES */
 
 const db = require('./database');
+const middleware = require('./middleware');
 
 const port = 5000;
 
 /* REQUIRING ROUTES */
 const usersRoute = require('./routes/users');
+
 /* \REQUIRING ROUTES */
 
 const app = express();
+const mainRouter = express.Router();
 
 /* MIDDLEWARES */ 
-
+app.use(session({
+    secret: 'somesecret',
+    cookie: {maxAge: 9999999},
+    saveUninitialized: false,
+    resave: false
+}))
 // Recognizes the incoming request object as a JSON Object
 app.use(express.json());
 // Recognizes the incoming request object as strings or arrays
 app.use(express.urlencoded({ extended: false }));
+app.use(middleware.login);
 //NOTE: Add other middlewares here...
 
 /* \MIDDLEWARES */ 
 
 /* ROUTES */
-app.use('/users', usersRoute);
+// Make everything accessible via /api first
+app.use('/api', mainRouter);
+mainRouter.use('/users', usersRoute);
 //NOTE: Add other routes here...
 
 /* \ROUTES */
@@ -33,7 +45,7 @@ app.use('/users', usersRoute);
 
 // Default route, used for testing if the application is reachable
 // It should return OK to the client
-app.get('/', (req, res) => {
+mainRouter.get('/', (req, res) => {
     res.send(200);
 })
 

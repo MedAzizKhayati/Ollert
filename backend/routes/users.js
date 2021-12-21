@@ -1,7 +1,21 @@
 const { Router } = require('express');
+const bcrypt = require('bcrypt');
 const db = require('../database');
 
+// DO NOT CHANGE, UNLESS YOU KNOW WHAT YOU'RE DOING !!!
+const SALT_ROUNDS = 10;
+
 router = Router();
+
+/* MIDDLEWARES */
+const hashPassword = async (req, res, next) => {
+    // Hashing the password with salt 0 - No need for great security here
+    const salt = await bcrypt.genSalt(SALT_ROUNDS);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+    next();
+}
+/* \MIDDLEWARES */
+
 
 // This route deletes a user from the database using the given id
 router.delete('/:id', async (req, res) => {
@@ -35,12 +49,10 @@ router.delete('/delete-greater/:id', async (req, res) => {
     }
 });
 
-
 // This route, when called, will return the list of the all the users in the database
 router.get('/list', async (req, res) => {
     try {
         users = (await db.promise().query(`SELECT * FROM users;`))[0];
-        console.log(users);
         res.json(users);
     } catch (err) {
         res.status(500).send(err.message);
@@ -64,12 +76,13 @@ router.get('/list/:count/:page', async (req, res) => {
 });
 
 // This route, when called, will create a user in the database according to the body of the post request.
-router.post('/create', (req, res) => {
+router.post('/create', hashPassword, async (req, res) => {
     const { username, email, password } = req.body;
     if (username && email && password) {
         try {
             db.promise().query(`
-                INSERT INTO USERS VALUES(NULL, "${username}", "${email}", "${password}", NULL, NULL)`
+            INSERT INTO USERS (username, email, password) VALUES
+             ('${username}', '${email}', '${password}')`
             );
             res.status(201).send({ msg: 'User Created' });
         } catch (err) {
@@ -77,7 +90,7 @@ router.post('/create', (req, res) => {
             res.status(500).send(err.message);
         }
     } else {
-        res.status(200).send({ msg: 'Please enter non empty fields.' });
+        res.status(401).send({ msg: 'Please enter non empty fields.' });
     }
 });
 
@@ -88,14 +101,14 @@ router.get('/create-random/:count', (req, res) => {
         for (let i = 0; i < count; i++) {
             const f = randomString;
             db.promise().query(`
-                INSERT INTO USERS VALUES(NULL, '${f()}', '${f()+"@"+f() + ".com"}', '${f()}', NULL, NULL)`
+                INSERT INTO USERS (username, email, password) VALUES 
+                ('${f()}', '${f()+"@"+f() + ".com"}', '${f()}')`
             );
         }
         res.status(201).send({ msg: `The database has been bombarded with ${count} users.` });
     }else{
         res.status(404).json({ msg: 'Bad number'})
     }
-    
 });
 
 // This function returns a random string used for testing.

@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.2",
+    "express-session": "^1.17.2",
     "mysql2": "^2.3.3",
     "nodeman": "^1.1.2"
   }
