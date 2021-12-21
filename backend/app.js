@@ -12,7 +12,8 @@ const port = 5000;
 
 /* REQUIRING ROUTES */
 const usersRoute = require('./routes/users');
-
+const projectsRoute = require('./routes/projects');
+const tasksRoute = require('./routes/tasks');
 /* \REQUIRING ROUTES */
 
 const app = express();
@@ -38,6 +39,8 @@ app.use(middleware.login);
 // Make everything accessible via /api first
 app.use('/api', mainRouter);
 mainRouter.use('/users', usersRoute);
+mainRouter.use('/projects', projectsRoute);
+mainRouter.use('/tasks', tasksRoute);
 //NOTE: Add other routes here...
 
 /* \ROUTES */

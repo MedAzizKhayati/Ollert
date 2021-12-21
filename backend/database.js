@@ -48,6 +48,13 @@ const initialQueries = () => {
         )
     `
     );
+    db.promise().query(`
+            CREATE TABLE IF NOT EXISTS project_member (
+                id_user int NOT NULL references users ,
+                id_project int NOT NULL references projects 
+            )
+    `
+    )
     
     // EXAMPLE: I figured that the users table needs to be dropped,
     // let's not delete the above query, but rather add this query 
