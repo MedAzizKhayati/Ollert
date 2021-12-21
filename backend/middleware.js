@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 // login middleware
 const login = async (req, res, next) => {
     // If the user is already authenticated, move on
-    if( req.isAuthenticated )
+    if( req.session.isAuthenticated )
         next();
     // otherwise, try to get the login details from the body
     else{
