@@ -33,7 +33,7 @@ const initialQueries = () => {
             type VARCHAR(255) NOT NULL,
             description TEXT,
             deadline DATE,
-            id_project_manager int references users
+            id_project_manager int NOT NULL references users
         )
     `);
     db.promise().query(`
