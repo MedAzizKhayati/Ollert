@@ -1,9 +1,8 @@
 const { Router } = require('express');
 const db = require('../database');
-const {login, nextIfManager} = require('../middleware');
+const {nextIfManager} = require('../middleware');
 
 router = Router();
-router.use(login);
 
 // This route deletes a project from the database using the given id
 router.delete('/:id',nextIfManager, async (req, res) => {

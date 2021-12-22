@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const db = require('./database');
 const middleware = require('./middleware');
+const {nextIfAuthenticated} =require('./middleware');
 
 const port = 5000;
 
@@ -30,6 +31,7 @@ app.use(session({
 app.use(express.json());
 // Recognizes the incoming request object as strings or arrays
 app.use(express.urlencoded({ extended: false }));
+app.use(nextIfAuthenticated);
 //NOTE: Add other middlewares here...
 
 /* \MIDDLEWARES */ 

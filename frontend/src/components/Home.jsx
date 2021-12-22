@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import '../style/Home.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -17,17 +16,11 @@ const Home = () => {
             } else {
                 setPage(page - 1);
             }
-        })
+        }).catch(err =>
+            navigate('/')
+        );
     }, [page]);
 
-    React.useEffect(() => {
-        axios.post('api/users/login',{
-            emai: '',
-            password: ''
-        }).catch(err => {
-            navigate('/');
-        })
-    }, [])
 
     const handleClick = (step) => {
         if (page + step > 0)

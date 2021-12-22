@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.top-section {
+    -webkit-background-size: cover;
+    background-size: cover;
+    transition: opacity 0.1s;
+    position: relative;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+}
+
+.navbar-list {
+    display: inline-block;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.navbar-links ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+}
+
+header {
+    background: linear-gradient(rgb(10, 10, 10), #0000);
+    position: fixed;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.cool-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: width .3s;
+}
+
+.cool-link:hover::after {
+    width: 100%;
+    transition: width .3s;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    right: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background: linear-gradient(rgb(10, 10, 10), #0000);
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover #Avatar{
+    box-shadow: 0 0 1pt 1pt white;
+}
+
+@media (max-width: 1000px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .brand-title {
+        display: none;
+    }
+    .toggle-button {
+        display: flex;
+    }
+    .navbar-links {
+        display: none;
+        width: 100%;
+    }
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+    .navbar-links ul li {
+        text-align: center;
+    }
+    .navbar-links ul li a {
+        padding: .5rem 1rem;
+        transition: 0.5s
+    }
+    .navbar-links.active {
+        display: flex;
+        transition: 0.5s;
+    }
+    .top-section {
+        position: relative;
+    }
+}
+
+@media (max-width: 1366px) {
+    .top-section {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .top-section {
+        font-size: 18px;
+    }
+}
