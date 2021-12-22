@@ -4,7 +4,7 @@ import '../style/Home.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
-export default () => {
+const Home = () => {
     const navigate = useNavigate();
     const rows = 10;
     const [users, setUsers] = React.useState([]);
@@ -12,7 +12,11 @@ export default () => {
 
     React.useEffect(() => {
         axios.get('api/users/list/' + rows + '/' + page).then(users => {
-            setUsers(users.data);
+            if (users.data.length > 0) {
+                setUsers(users.data);
+            } else {
+                setPage(page - 1);
+            }
         })
     }, [page]);
 
@@ -68,3 +72,5 @@ export default () => {
 
     );
 }
+
+export default Home;

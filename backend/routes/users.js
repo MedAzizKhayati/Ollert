@@ -2,6 +2,7 @@ const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const db = require('../database');
 const { login, hashPassword } = require('../middleware')
+const { isEmail } = require('validator');
 
 
 router = Router();
@@ -14,19 +15,26 @@ router = Router();
 // This route, when called, will create a user in the database according to the body of the post request.
 router.post('/create', hashPassword, async (req, res) => {
     const { username, email, password } = req.body;
-    if (username && email && password) {
+    if (username && username.length >= 3 && isEmail(email) && password) {
         try {
-            db.promise().query(`
-            INSERT INTO USERS (username, email, password) VALUES
-             ('${username}', '${email}', '${password}')`
-            );
-            res.status(201).send({ msg: 'User Created' });
+            users = (await db.promise().query(`
+                SELECT id from users where email = '${email}' or username = '${username}'
+            `))[0];
+            if(users.length == 0){
+                db.promise().query(`
+                INSERT INTO USERS (username, email, password) VALUES
+                ('${username}', '${email}', '${password}')`
+                );
+                res.status(201).send({ msg: 'User Created' });
+            } else{
+                res.status(401).send({ msg: 'Email/username already in use. Please use another information.'});
+            }
         } catch (err) {
             console.log(err);
             res.status(500).send(err.message);
         }
     } else {
-        res.status(401).send({ msg: 'Please enter non empty fields.' });
+        res.status(401).send({ msg: 'Make sure you entered all the fields correctly.' });
     }
 });
 
@@ -35,6 +43,28 @@ router.post('/create', hashPassword, async (req, res) => {
 router.use(login);
 
 /* \MIDDLEWARES */
+
+// This route updates the user information in the database
+router.put('/update', async (req, res) => {
+    const {email, first_name, last_name} = req.body;
+    if(isEmail(email) && first_name != undefined && last_name != undefined) {
+        user = (await db.promise().query(`SELECT id FROM USERS WHERE email = '${email}'`))[0];
+        if(user.length == 0) {
+            try {
+                (await db.promise().query(`UPDATE USERS SET 
+                email = '${email}', first_name = '${first_name}', last_name = '${last_name}' WHERE id = ${req.session.user.id}
+                `));
+                res.status(201).json({ msg: 'User has been updater'})
+            } catch (err) {
+                res.status(500).json({ 'msg': err.message });
+            }
+        }else{
+            res.status(401).json({ 'msg': 'Email already in use.'});
+        }
+    }else{
+        res.status(401).json({ 'msg': 'Empty fields/wrong email.'});
+    }
+})
 
 // This route deletes a user from the database using the given id
 router.delete('/:id', async (req, res) => {
@@ -51,6 +81,7 @@ router.delete('/:id', async (req, res) => {
         res.json({ 'msg': 'The ID is invalid.' });
     }
 });
+
 
 
 
@@ -95,7 +126,6 @@ router.get('/list/:count/:page', async (req, res) => {
         }
     }
 });
-
 
 // This route, when called, will bombard the users' table with random users
 router.get('/create-random/:count', (req, res) => {
