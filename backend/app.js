@@ -30,7 +30,6 @@ app.use(session({
 app.use(express.json());
 // Recognizes the incoming request object as strings or arrays
 app.use(express.urlencoded({ extended: false }));
-app.use(middleware.login);
 //NOTE: Add other middlewares here...
 
 /* \MIDDLEWARES */ 
@@ -41,6 +40,7 @@ app.use('/api', mainRouter);
 mainRouter.use('/users', usersRoute);
 mainRouter.use('/projects', projectsRoute);
 mainRouter.use('/tasks', tasksRoute);
+
 //NOTE: Add other routes here...
 
 /* \ROUTES */

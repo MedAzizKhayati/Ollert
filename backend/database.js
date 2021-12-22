@@ -20,12 +20,11 @@ const initialQueries = () => {
             password VARCHAR(255) NOT NULL,
             first_name VARCHAR(255),
             last_name VARCHAR(255),
-            role VARCHAR(50) check (ROLE in ('CHEF', 'MEMBRE')) ,
+            role VARCHAR(50) NOT NULL DEFAULT 'MEMBRE' check (ROLE in ('CHEF', 'MEMBRE')),
             picture VARCHAR(255),
             PRIMARY KEY(id)
         )`
     );
-    
     db.promise().query(`
         CREATE TABLE IF NOT EXISTS projects (
             id int AUTO_INCREMENT PRIMARY KEY,
@@ -39,7 +38,7 @@ const initialQueries = () => {
     db.promise().query(`
         CREATE TABLE IF NOT EXISTS tasks(
             id int AUTO_INCREMENT PRIMARY KEY,
-            state VARCHAR(255) Check(state in ('TODO','DOING','DONE')),
+            state VARCHAR(255) NOT NULL DEFAULT 'TODO' Check(state in ('TODO','DOING','DONE')),
             title VARCHAR(255) NOT NULL,
             description TEXT ,
             deadline DATE ,
@@ -49,10 +48,10 @@ const initialQueries = () => {
     `
     );
     db.promise().query(`
-            CREATE TABLE IF NOT EXISTS project_member (
-                id_user int NOT NULL references users ,
-                id_project int NOT NULL references projects 
-            )
+        CREATE TABLE IF NOT EXISTS project_member (
+            id_user int NOT NULL references users ,
+            id_project int NOT NULL references projects 
+        )
     `
     )
     

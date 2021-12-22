@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const db = require('../database');
+const {login, nextIfManager} = require('../middleware');
 
 router = Router();
+router.use(login);
 
 // This route deletes a task from the database using the given id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', nextIfManager, async (req, res) => {
     const id  = parseInt(req.params.id);
     if(id >= 0){
         task = (await db.promise().query(`SELECT * FROM tasks WHERE id = ${id}`))[0];
@@ -19,28 +21,6 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// This route returns info about a project from the database using the given id
-router.get('/:id', async (req,res,next) => {
-    const id = parseInt(req.params.id) ;
-    if(id){
-        task = (await db.promise().query(`SELECT * FROM tasks WHERE id = ${id}`))[0];
-        if(task.length == 1){
-            res.json({
-                'id':id,
-                'state' : task[0].state,
-                'title' : task[0].title,
-                'description' : task[0].description,
-                'deadline' : task[0].deadline,
-                'id_task_manager' : task[0].id_task_manager,
-                'id_user' : task[0].id_user
-        });
-        }else{
-            res.json({'msg': 'task ${id} not found'});
-        }
-    }else{
-        next() ;
-    }
-})
 
 // This route will return all tasks from all projects that a user is involved in
 router.get('/user/:id' , async (req,res) => {
@@ -94,7 +74,7 @@ router.get('/list/:count/:page', async (req, res) => {
 });
 
 // This route, when called, will create a task in the database according to the body of the post request.
-router.post('/create', async (req, res) => {
+router.post('/create', nextIfManager, async (req, res) => {
     const { state , title , description , deadline , id_project , id_user } = req.body;
     if (title && id_project && ['TODO','DOING','DONE'].includes(state) ) {
         try {
@@ -113,6 +93,28 @@ router.post('/create', async (req, res) => {
 });
 
 
+// This route returns info about a project from the database using the given id
+router.get('/:id', async (req,res,next) => {
+    const id = parseInt(req.params.id) ;
+    if(id){
+        task = (await db.promise().query(`SELECT * FROM tasks WHERE id = ${id}`))[0];
+        if(task.length == 1){
+            res.json({
+                'id':id,
+                'state' : task[0].state,
+                'title' : task[0].title,
+                'description' : task[0].description,
+                'deadline' : task[0].deadline,
+                'id_task_manager' : task[0].id_task_manager,
+                'id_user' : task[0].id_user
+        });
+        }else{
+            res.json({'msg': 'task ${id} not found'});
+        }
+    }else{
+        next() ;
+    }
+});
 
 // Exporting the router
 module.exports = router;

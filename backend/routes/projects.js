@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const db = require('../database');
+const {login, nextIfManager} = require('../middleware');
 
 router = Router();
+router.use(login);
 
 // This route deletes a project from the database using the given id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',nextIfManager, async (req, res) => {
     const id  = parseInt(req.params.id);
     if(id >= 0){
         project = (await db.promise().query(`SELECT * FROM projects WHERE id = ${id}`))[0];
@@ -32,7 +34,7 @@ router.get('/:id', async (req,res,next) => {
                 'description' : project[0].description,
                 'deadline' : project[0].deadline,
                 'id_project_manager' : project[0].id_project_manager
-        });
+            });
         }else{
             res.json({'msg': 'Project ${id} not found'});
         }
@@ -42,11 +44,12 @@ router.get('/:id', async (req,res,next) => {
 })
 
 // This route will return all projects that a user is involved in
-router.get('/user/:id' , async (req,res) => {
+router.get('/user/:id', async (req,res) => {
     const id = parseInt(req.params.id) ;
     try {
         projects = (await db.promise().query(`SELECT * FROM projects p where 
-            p.id IN (select id_project from project_member pm where pm.id_user = ${id} ) ;`))[0];
+            p.id IN (select id_project from project_member pm where pm.id_user = ${id} )
+            or p.id_project_manager = ${id};`))[0];
         res.json(projects);
     } catch (err) {
         res.status(500).send(err.message);
@@ -80,7 +83,7 @@ router.get('/list/:count/:page', async (req, res) => {
 });
 
 // This route, when called, will create a project in the database according to the body of the post request.
-router.post('/create', async (req, res) => {
+router.post('/create', nextIfManager,async (req, res) => {
     const { name,type,description,deadline,id_project_manager } = req.body;
     if (name && type && id_project_manager) {
         try {
