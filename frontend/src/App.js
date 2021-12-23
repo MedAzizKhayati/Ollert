@@ -8,14 +8,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import {fetchUser} from './api/users';
 
+
 function App() {
     const [user, setUser] = React.useState(null);
 
     React.useEffect(async () => {
         setUser(await fetchUser());
-    },[])
-
-    //  const user = 1; for testing purposes
+    }, [])
+//for testing purposes
+    // const user = 1;
 
     return (
         <Router>
@@ -25,7 +26,7 @@ function App() {
                 <Route path="/sign-in" element={<Login user={user}/>}/>
                 <Route path="/home" element={<Home user={user}/>}/>
                 <Route path="/profile" element={<Profile user={user}/>}/>
-                <Route path="/Projects" element={<Projects user={user}/>}/>
+                <Route path="/projects" element={<Projects user={user}/>}/>
 
             </Routes>
         </Router>

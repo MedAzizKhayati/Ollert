@@ -8,7 +8,7 @@ const Home = () => {
     const rows = 17;
     const [users, setUsers] = React.useState([]);
     const [page, setPage] = React.useState(1);
-    /*
+
         React.useEffect(() => {
             axios.get('api/users/list/' + rows + '/' + page).then(users => {
                 if (users.data.length > 0) {
@@ -21,7 +21,7 @@ const Home = () => {
             );
         }, [page]);
 
-    */
+
     const handleClick = (step) => {
         if (page + step > 0)
             setPage(page + step);
