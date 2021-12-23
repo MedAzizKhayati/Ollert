@@ -2,7 +2,8 @@ import Login from './components/LoginPage';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Projects from './components/ProjectsPage';
+import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import {fetchUser} from './api/users';
@@ -13,15 +14,19 @@ function App() {
     React.useEffect(async () => {
         setUser(await fetchUser());
     },[])
-    
+
+    //  const user = 1; for testing purposes
+
     return (
         <Router>
             {user ? <Navbar/> : null}
             <Routes>
-                <Route path='/' element={<Login user={user}/>} />
-                <Route path="/sign-in" element={<Login user={user}/>} />
-                <Route path="/home" element={<Home  user={user}/>} />
-                <Route path="/profile" element={<Profile user={user}/>} />
+                <Route path='/' element={<Login user={user}/>}/>
+                <Route path="/sign-in" element={<Login user={user}/>}/>
+                <Route path="/home" element={<Home user={user}/>}/>
+                <Route path="/profile" element={<Profile user={user}/>}/>
+                <Route path="/Projects" element={<Projects user={user}/>}/>
+
             </Routes>
         </Router>
     );
