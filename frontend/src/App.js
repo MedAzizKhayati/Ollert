@@ -5,23 +5,32 @@ import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import {fetchUser} from './api/users';
+import { fetchUser }  from './api/users';
 
 function App() {
     const [user, setUser] = React.useState(null);
-
     React.useEffect(async () => {
         setUser(await fetchUser());
-    },[])
-    
+    }, []);
+
+    if (!user){
+        return (
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
+            </Router>
+        );
+    }
+        
     return (
         <Router>
-            {user ? <Navbar/> : null}
+            <Navbar/>
             <Routes>
-                <Route path='/' element={<Login user={user}/>} />
-                <Route path="/sign-in" element={<Login user={user}/>} />
-                <Route path="/home" element={<Home  user={user}/>} />
-                <Route path="/profile" element={<Profile user={user}/>} />
+                <Route path="/" element={<Home user={user} />} />
+                <Route path="/home" element={<Home user={user} />} />
+                <Route path="/profile" element={<Profile user={user} />} />
             </Routes>
         </Router>
     );

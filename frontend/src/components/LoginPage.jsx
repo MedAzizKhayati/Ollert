@@ -8,9 +8,6 @@ const Login = (props) => {
     const [email, setEmail] = React.useState(null);
     const [password, setPassword] = React.useState(null);
 
-    if(props.user)
-        navigate('/home')
-
     const handleLogin = async (event) => {
         axios.post('/api/users/login', {
             email: email,
