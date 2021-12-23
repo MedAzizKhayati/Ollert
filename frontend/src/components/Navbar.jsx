@@ -6,16 +6,7 @@ import {fetchUser} from '../api/users';
 
 const Navbar = (props) => {
     const navigate = useNavigate();
-    const [user, setUser] = React.useState({});
-
-    React.useEffect(async () =>{
-        let user = await fetchUser();
-        if(!user)
-            navigate('/');
-        else{
-            setUser(user);
-        }
-    },[])
+    const [user, setUser] = React.useState(props.user);
 
     const handleLogout = () => {
         axios.get('/api/users/logout').then((response) => {
@@ -44,7 +35,7 @@ const Navbar = (props) => {
                     <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/home')}>Home</a></li>
                     <div className="dropdown ">
                         <li className="navbar-list">
-                            <img width="50" height="50" style={{ borderRadius: '50%' }} src='/api/users/profilePicture' id="Avatar" />
+                            <img width="50" height="50" style={{ borderRadius: '50%' }} src='/api/users/profilePicture/' id="Avatar" />
                         </li>
                         <div className="dropdown-content">
                             <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/profile')}>Profile</a></li>

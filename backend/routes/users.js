@@ -216,7 +216,7 @@ router.post('/updateImage', async (req, res) => {
     if(!sampleFile.mimetype.startsWith('image/')){
         return res.status(400).send({msg: 'The uploaded file is not a picture'});
     }
-    uploadPath = path.resolve(process.env.FILE_UPLOAD_PATH) + sampleFile.name + Date.now();
+    uploadPath = path.resolve(process.env.FILE_UPLOAD_PATH) + Date.now() + sampleFile.name + 
 
     // use mv() to place file on the server
     sampleFile.mv(uploadPath, async err => {

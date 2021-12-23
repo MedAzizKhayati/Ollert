@@ -4,19 +4,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {fetchUser} from '../api/users';
 
-const Profile = () => {
+const Profile = (props) => {
     const navigate = useNavigate();
-    const [user, setUser] = React.useState({});
-
-    React.useEffect(async () => {
-        let user = await fetchUser();
-        if(!user)
-            navigate('/');
-        else{
-            setUser(user);
-        }
-    },[])
-
+    const [user, setUser] = React.useState(props.user);
+    
     const handleUpdate = async (event) => {
         event.preventDefault();
         axios.put('/api/users/update', user).then((response) => {
