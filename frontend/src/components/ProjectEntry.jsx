@@ -4,14 +4,14 @@ import '../style/ProjectEntry.css';
 
 const ProjectEntry = (props) => {
 
-    const [Project, setProject] = React.useState({});
+    const [project, setProject] = React.useState({});
 
     React.useEffect(async () => {
-        let Project = await fetchProject();
-        setProject(Project);
+        let project = await fetchProject();
+        setProject(project);
     }, [])
 
-    const projectName = `Project name ${Project}`;
+    const projectName = `Project name ${project}`;
     const projectMembers = [];
     return (
         <div className="projectEntry">
