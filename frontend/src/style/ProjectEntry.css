@@ -1,0 +1,17 @@
+
+.projectEntry {
+    display : flex;
+    border: solid rgba(238, 135, 13, 0.78);
+    justify-content: space-between;
+
+}
+.left-container {
+    display: flex;
+    flex-direction: column;
+}
+.members-icons {
+    display: flex;
+}
+.right-container {
+
+}

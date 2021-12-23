@@ -8,18 +8,18 @@ const Home = () => {
     const rows = 17;
     const [users, setUsers] = React.useState([]);
     const [page, setPage] = React.useState(1);
-    
-    React.useEffect(() => {
-        axios.get('api/users/list/' + rows + '/' + page).then(users => {
-            if (users.data.length > 0) {
-                setUsers(users.data);
-            } else {
-                setPage(page - 1);
-            }
-        }).catch(err => 
-            navigate('/')
-        );
-    }, [page]);
+
+        React.useEffect(() => {
+            axios.get('api/users/list/' + rows + '/' + page).then(users => {
+                if (users.data.length > 0) {
+                    setUsers(users.data);
+                } else {
+                    setPage(page - 1);
+                }
+            }).catch(err =>
+                navigate('/')
+            );
+        }, [page]);
 
 
     const handleClick = (step) => {
