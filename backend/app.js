@@ -1,15 +1,18 @@
 /* LIBRARIES */
 const express = require('express');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
+require('dotenv').config();
 //NOTE: Add external libraries here...
+
 
 /* \LIBRARIES */
 
 const db = require('./database');
 const middleware = require('./middleware');
-const {nextIfAuthenticated} =require('./middleware');
+const { nextIfAuthenticated } = require('./middleware');
 
-const port = 5000;
+const port = process.env.PORT;
 
 /* REQUIRING ROUTES */
 const usersRoute = require('./routes/users');
@@ -20,10 +23,10 @@ const tasksRoute = require('./routes/tasks');
 const app = express();
 const mainRouter = express.Router();
 
-/* MIDDLEWARES */ 
+/* MIDDLEWARES */
 app.use(session({
     secret: 'somesecret',
-    cookie: {maxAge: 9999999},
+    cookie: { maxAge: 9999999 },
     saveUninitialized: false,
     resave: false
 }))
@@ -32,9 +35,11 @@ app.use(express.json());
 // Recognizes the incoming request object as strings or arrays
 app.use(express.urlencoded({ extended: false }));
 app.use(nextIfAuthenticated);
+app.use(fileUpload());
 //NOTE: Add other middlewares here...
 
-/* \MIDDLEWARES */ 
+/* \MIDDLEWARES */
+
 
 /* ROUTES */
 // Make everything accessible via /api first
@@ -55,6 +60,6 @@ mainRouter.get('/', (req, res) => {
 })
 
 // Starting the serving and listening on port
-app.listen(port, () => 
+app.listen(port, () =>
     console.log("Server listening on port " + port)
 );

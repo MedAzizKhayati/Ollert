@@ -3,14 +3,13 @@ import '../style/LoginPage.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState(null);
     const [password, setPassword] = React.useState(null);
 
-    React.useEffect(() => {
-        handleLogin();
-    }, [])
+    if(props.user)
+            navigate('/home')
 
     const handleLogin = async (event) => {
         axios.post('/api/users/login', {
@@ -20,6 +19,7 @@ const Login = () => {
             const { success } = response.data;
             if(success) {
                 navigate('/home');
+                window.location.reload();
             }
         })
     }
@@ -37,6 +37,7 @@ const Login = () => {
                         <label>Password</label>
                         <input type="password" onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Enter password" />
                     </div>
+                    <br />
                     <button type="submit" onClick={(event) => handleLogin(event)} className="btn btn-dark btn-lg btn-block">Sign in</button>
                 </form>
             </div>

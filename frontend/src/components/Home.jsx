@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const navigate = useNavigate();
-    const rows = 10;
+    const rows = 17;
     const [users, setUsers] = React.useState([]);
     const [page, setPage] = React.useState(1);
-
+    
     React.useEffect(() => {
         axios.get('api/users/list/' + rows + '/' + page).then(users => {
             if (users.data.length > 0) {
@@ -16,7 +16,7 @@ const Home = () => {
             } else {
                 setPage(page - 1);
             }
-        }).catch(err =>
+        }).catch(err => 
             navigate('/')
         );
     }, [page]);
@@ -40,13 +40,15 @@ const Home = () => {
                     <li className="page-item"><a className="page-link" onClick={() => handleClick(1)}>Next</a></li>
                 </ul>
             </nav>
-            <table className="table">
+            <table className="table" style={{color: 'white'}}>
                 <thead>
                     <tr>
                         <th scope="col">User ID</th>
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Password</th>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Role</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +57,9 @@ const Home = () => {
                             <th scope="row">{user.id}</th>
                             <td>{user.username}</td>
                             <td>{user.email}</td>
-                            <td>{user.password}</td>
+                            <td>{user.first_name}</td>
+                            <td>{user.last_name}</td>
+                            <td>{user.role}</td>
                         </tr>
                     )}
                 </tbody>

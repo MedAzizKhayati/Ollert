@@ -3,11 +3,24 @@ const bcrypt = require('bcrypt');
 const db = require('../database');
 const { hashPassword } = require('../middleware')
 const { isEmail } = require('validator');
-
+const path = require('path');
 
 router = Router();
 
 /* MIDDLEWARES */
+
+const updateUserSession = async (req, res, next) => {
+    try {
+        user = (await db.promise().query(`SELECT 
+        id, username, email, first_name, last_name, picture, role FROM USERS
+        WHERE id = '${req.session.user.id}'
+        `))[0][0];
+        req.session.user = user;
+        return next();
+    } catch (err) {
+        return res.status(500).send(err.msg);
+    }
+}
 
 /* \MIDDLEWARES */
 
@@ -22,8 +35,8 @@ router.post('/create', hashPassword, async (req, res) => {
             `))[0];
             if (users.length == 0) {
                 db.promise().query(`
-                INSERT INTO USERS (username, email, password) VALUES
-                ('${username}', '${email}', '${password}')`
+                INSERT INTO USERS (username, email, password, picture) VALUES
+                ('${username}', '${email}', '${password}', '${__dirname + process.env.DEFAULT_PROFILE_PICTURE}')`
                 );
                 res.status(201).send({ msg: 'User Created' });
             } else {
@@ -41,8 +54,10 @@ router.post('/create', hashPassword, async (req, res) => {
 // This route updates the user information in the database
 router.put('/update', async (req, res) => {
     const { email, first_name, last_name } = req.body;
-    if (isEmail(email) && first_name != undefined && last_name != undefined) {
-        user = (await db.promise().query(`SELECT id FROM USERS WHERE email = '${email}'`))[0];
+    if (email && isEmail(email) && first_name != undefined && last_name != undefined) {
+        let user = []
+        if(email != req.session.user.email)
+            user = (await db.promise().query(`SELECT id FROM USERS WHERE email = '${email}'`))[0];
         if (user.length == 0) {
             try {
                 (await db.promise().query(`UPDATE USERS SET 
@@ -141,7 +156,6 @@ router.get('/create-random/:count', (req, res) => {
 // This route, is the login route.
 router.post('/login', async (req, res) => {
     let { email, password } = req.body;
-
     if (email && password) {
         try {
             const user = (await db.promise().query(`
@@ -165,32 +179,18 @@ router.post('/login', async (req, res) => {
 })
 
 // This route, will return the user stored in session
-router.get('/getUser', async (req, res) => {
-    try {
-        let user = (await db.promise().query(`
-                SELECT * FROM USERS WHERE email = '${req.session.user.email}'
-        `))[0];
-        // Checking if the user exists and the password matches using the bcrypt.compare function
-        if (user.length) {
-            req.session.user = user[0];
-            user = user[0];
-            res.status(201).send({
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    role: user.role
-                }
-            });
+router.get('/getUser',updateUserSession, async (req, res) => {
+    user = req.session.user;
+    res.status(201).send({
+        user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            role: user.role
         }
-        else
-            res.status(500).send({ msg: 'Internal error' })
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    });
 })
 
 
@@ -199,6 +199,38 @@ router.get('/logout', (req, res) => {
     req.session.isAuthenticated = false;
     req.session.user = null;
     res.status(201).send({ msg: 'Successfully logged out.' });
+})
+
+router.get('/profilePicture', async (req, res) => {
+    res.sendFile(path.resolve(req.session.user.picture));
+})
+
+
+// This route will take care of uploading the image to the server and saving it to the database
+router.post('/updateImage', async (req, res) => {
+    let sampleFile, uploadPath;
+    if(!req.files || Object.keys(req.files).length == 0) {
+        return res.status(400).send({ msg: 'No picture was uploaded'});
+    }
+    sampleFile = req.files.sampleFile;
+    if(!sampleFile.mimetype.startsWith('image/')){
+        return res.status(400).send({msg: 'The uploaded file is not a picture'});
+    }
+    uploadPath = path.resolve(process.env.FILE_UPLOAD_PATH) + sampleFile.name + Date.now();
+
+    // use mv() to place file on the server
+    sampleFile.mv(uploadPath, async err => {
+        if(err) return res.status(500).send(err);
+        id = req.session.user.id;
+        try {
+            await db.promise().query(`
+            UPDATE USERS SET picture = ${uploadPath} WHERE id = ${id}
+            `)
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+        return res.send('Image uploaded.');
+    })
 })
 
 // This route will return information about the user using a given id
@@ -227,6 +259,7 @@ router.get('/:id', async (req, res) => {
 function randomString() {
     return (Math.random() + 1).toString(36).substring(2);
 };
+
 
 // Exporting the router
 module.exports = router;

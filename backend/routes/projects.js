@@ -5,7 +5,7 @@ const {nextIfManager} = require('../middleware');
 router = Router();
 
 // This route deletes a project from the database using the given id
-router.delete('/:id',nextIfManager, async (req, res) => {
+router.delete('/:id', nextIfManager, async (req, res) => {
     const id  = parseInt(req.params.id);
     if(id >= 0){
         project = (await db.promise().query(`SELECT * FROM projects WHERE id = ${id}`))[0];
