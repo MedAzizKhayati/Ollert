@@ -2,10 +2,21 @@ import React from 'react';
 import axios from 'axios';
 import '../style/Navbar.css';
 import { useNavigate } from 'react-router-dom';
+import {fetchUser} from '../api/users';
 
 const Navbar = (props) => {
     const navigate = useNavigate();
-    const user = props.user;
+    const [user, setUser] = React.useState({});
+
+    React.useEffect(async () =>{
+        let user = await fetchUser();
+        if(!user)
+            navigate('/');
+        else{
+            setUser(user);
+        }
+    },[])
+
     const handleLogout = () => {
         axios.get('/api/users/logout').then((response) => {
             console.log('Successfully logged out');

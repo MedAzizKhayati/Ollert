@@ -2,16 +2,20 @@ import React, { Component } from "react";
 import '../style/LoginPage.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {fetchUser} from '../api/users';
 
-const Profile = (props) => {
+const Profile = () => {
     const navigate = useNavigate();
-    const [user, setUser] = React.useState(props.user);
+    const [user, setUser] = React.useState({});
 
-    React.useEffect(() => {
+    React.useEffect(async () => {
+        let user = await fetchUser();
         if(!user)
-            navigate('/home');
+            navigate('/');
+        else{
+            setUser(user);
+        }
     },[])
-        
 
     const handleUpdate = async (event) => {
         event.preventDefault();

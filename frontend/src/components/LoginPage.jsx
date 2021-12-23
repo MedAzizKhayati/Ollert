@@ -9,7 +9,7 @@ const Login = (props) => {
     const [password, setPassword] = React.useState(null);
 
     if(props.user)
-            navigate('/home')
+        navigate('/home')
 
     const handleLogin = async (event) => {
         axios.post('/api/users/login', {
