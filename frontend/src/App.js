@@ -19,7 +19,7 @@ function App() {
         return (
             <Router>
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route path="/*" element={<Login />} />
                     <Route path="/login" element={<Login />} />
                 </Routes>
             </Router>
@@ -27,7 +27,7 @@ function App() {
     }
     return (
         <Router>
-            <Navbar/>
+            <Navbar user={user}/>
             <Routes>
                 <Route path="/" element={<Home user={user} />} />
                 <Route path="/home" element={<Home user={user} />} />

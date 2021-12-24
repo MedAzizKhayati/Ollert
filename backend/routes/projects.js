@@ -100,6 +100,56 @@ router.post('/create', nextIfManager,async (req, res) => {
     }
 });
 
+//This route will look for project of similar name
+router.get('/search', async (req, res) =>{
+    const query = req.query.query;
+    try {
+        let projects = []
+        if(query && query != '')
+            projects = (await db.promise().query(
+                `
+                    SELECT * FROM PROJECTS WHERE NAME LIKE '${query}%'
+                `
+            ))[0];
+        return res.status(200).send(projects);
+    } catch (err) {
+        return res.status(500).send({ msg: err.msg})
+    }
+
+})
+
+//This route, when called will create random projects with a random project manager.
+router.get('/create-random/:count', nextIfManager, (req, res) =>{
+    const count = parseInt(req.params.count);
+    if(count)
+        for (let i = 0; i < count; i++)
+            if(!createRandomProject())
+                return res.status(500).send({msg: 'Internal error'})
+    res.send({ msg: 'success'});
+})
+
+//This function is for creating a ranodom project 
+const createRandomProject = async () => {
+    let projectManager = 1;
+    let users = (await db.promise().query(`SELECT id from users WHERE role = 'CHEF'`))[0];
+    projectManager = users[Math.floor(Math.random() * users.length)].id
+    const f = randomString;
+    try {
+        db.promise().query(`
+        INSERT INTO PROJECTS (name, type, description, deadline, id_project_manager)
+        VALUES ('${f()}', '${f()}', '${f()}', '${new Date(Date.now() + Math.floor(Math.random() * 15 + 1) * 24 * 3600 * 1000).toISOString().slice(0, 19).replace('T', ' ')}', ${projectManager})
+        `)
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+// This function returns a random string used for testing.
+function randomString() {
+    return (Math.random() + 1).toString(36).substring(2);
+};
 
 
 // Exporting the router

@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import '../style/Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import {fetchUser} from '../api/users';
 
 const Navbar = (props) => {
     const navigate = useNavigate();
@@ -18,10 +17,16 @@ const Navbar = (props) => {
 
 
     return (
-        <nav className="navbar" style={{position: 'sticky'}}>
+        <nav className="navbar" style={{ position: 'sticky' }}>
             <div className="brand-title">
-                <form className="form-inline">
+                <form className="form-inline" autocomplete="off">
                     <input name="user" className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                    <div className="autocomplete-items">
+                        {/* <div>
+                            hello
+                            <input type='hidden' className="autocomplete-active" value='hello' />
+                        </div> */}
+                    </div>
                 </form>
             </div>
             <a href="#" className="toggle-button">
@@ -39,7 +44,7 @@ const Navbar = (props) => {
                         </li>
                         <div className="dropdown-content">
                             <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/profile')}>Profile</a></li>
-                            <li className="navbar-list"><a className="cool-link" onClick = {handleLogout}>Logout</a></li>
+                            <li className="navbar-list"><a className="cool-link" onClick={handleLogout}>Logout</a></li>
                         </div>
                     </div>
                 </ul>

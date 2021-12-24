@@ -4,12 +4,7 @@ import '../style/ProjectEntry.css';
 
 const ProjectEntry = (props) => {
 
-    const [project, setProject] = React.useState({});
-
-    React.useEffect(async () => {
-        let project = await fetchProject();
-        setProject(project);
-    }, [])
+    const [project, setProject] = React.useState(props.project);
 
     const projectName = `Project name ${project}`;
     const projectMembers = [];
@@ -21,12 +16,10 @@ const ProjectEntry = (props) => {
 
                 </div>
             </div>
-
             <div className="right-container">
                 <div className="project-info"></div>
                 <div className="poregress-bar"></div>
             </div>
-
         </div>
     )
 }

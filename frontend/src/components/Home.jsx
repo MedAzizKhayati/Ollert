@@ -43,7 +43,7 @@ const Home = () => {
             <table className="table" style={{color: 'white'}}>
                 <thead>
                     <tr>
-                        <th scope="col">User ID</th>
+                        <th scope="col">User Photo</th>
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
                         <th scope="col">First name</th>
@@ -54,7 +54,10 @@ const Home = () => {
                 <tbody>
                     {users.map(user =>
                         <tr key={user.id} >
-                            <th scope="row">{user.id}</th>
+                            <th scope="row">
+                                <img width="50" height="50" style={{ borderRadius: '50%' }} 
+                                src={'/api/users/profilePicture/' + user.id} id="Avatar" />
+                            </th>
                             <td>{user.username}</td>
                             <td>{user.email}</td>
                             <td>{user.first_name}</td>
