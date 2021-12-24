@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = (props) => {
     const navigate = useNavigate();
     const [user, setUser] = React.useState(props.user);
+    const [query, setQuery] = React.useState([])
 
     const handleLogout = () => {
         axios.get('/api/users/logout').then((response) => {
@@ -15,17 +16,28 @@ const Navbar = (props) => {
         window.location.reload();
     }
 
+    const handleSearch = (event) => {
+        axios.get('/api/projects/search',
+            {
+                params: {
+                    query: event.target.value
+                }
+            }
+        ).then(response => setQuery(response.data))
+            .catch(err => console.log(err));
+    }
 
     return (
         <nav className="navbar" style={{ position: 'sticky' }}>
             <div className="brand-title">
-                <form className="form-inline" autocomplete="off">
+                <form className="form-inline autocomplete" autoComplete="off" onChange={handleSearch}>
                     <input name="user" className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                     <div className="autocomplete-items">
-                        {/* <div>
-                            hello
-                            <input type='hidden' className="autocomplete-active" value='hello' />
-                        </div> */}
+                        {query.map(project =>
+                            <div>
+                                {project.name}
+                                <input type='hidden' className="autocomplete-active" value={project.name} />
+                            </div>)}
                     </div>
                 </form>
             </div>

@@ -108,7 +108,8 @@ router.get('/search', async (req, res) =>{
         if(query && query != '')
             projects = (await db.promise().query(
                 `
-                    SELECT * FROM PROJECTS WHERE NAME LIKE '${query}%'
+                    SELECT name FROM PROJECTS WHERE NAME LIKE '${query}%'
+                    LIMIT 7
                 `
             ))[0];
         return res.status(200).send(projects);
