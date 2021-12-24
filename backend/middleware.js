@@ -12,7 +12,7 @@ const nextIfAuthenticated = async (req, res, next) => {
     if( req.session.isAuthenticated || PATHS_NO_AUTHENTICATION.includes(req.path) ) 
         next();
     else{
-        res.status(401).send({msg: 'You are not authenticated'})
+        return res.json({error: 'You are not authenticated'})
     }
     
 }

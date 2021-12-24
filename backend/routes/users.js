@@ -173,7 +173,7 @@ router.post('/login', async (req, res) => {
                 res.status(201).send({ success: 'Successfully logged in.' });
             }
             else
-                res.status(401).send({ msg: 'Wrong email or password.' })
+                res.send({ error: 'Wrong email or password.' })
         } catch (err) {
             console.log(err);
             res.status(500).send(err.message);

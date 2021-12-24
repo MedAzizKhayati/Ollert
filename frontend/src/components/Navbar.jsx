@@ -7,6 +7,7 @@ const Navbar = (props) => {
     const navigate = useNavigate();
     const [user, setUser] = React.useState(props.user);
     const [query, setQuery] = React.useState([])
+    const [searchWord, setSearchWord] = React.useState('')
 
     const handleLogout = () => {
         axios.get('/api/users/logout').then((response) => {
@@ -23,8 +24,10 @@ const Navbar = (props) => {
                     query: event.target.value
                 }
             }
-        ).then(response => setQuery(response.data))
-            .catch(err => console.log(err));
+        ).then(response =>{
+            setQuery(response.data);
+            setSearchWord(event.target.value);
+        }).catch(err => console.log(err));
     }
 
     return (
@@ -35,7 +38,8 @@ const Navbar = (props) => {
                     <div className="autocomplete-items">
                         {query.map(project =>
                             <div>
-                                {project.name}
+                                <strong>{project.name.slice(0, searchWord.length)}</strong>
+                                {project.name.slice(searchWord.length)}
                                 <input type='hidden' className="autocomplete-active" value={project.name} />
                             </div>)}
                     </div>

@@ -2,14 +2,11 @@ import axios from 'axios';
 
 
 const fetchUser = async () => {
-    let user;
+    let user = null;
     await axios.get('/api/users/getUser').then((response) => {
-        if (response.data.user) {
+        if (response.data.user)
             user = (response.data.user);
-        }
-    }).catch((err) => {
-        user = (null);
-    })
+    });
     return user;
 }   
 

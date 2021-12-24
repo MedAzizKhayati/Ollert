@@ -10,7 +10,7 @@ import { fetchUser }  from './api/users';
 
 
 function App() {
-    const [user, setUser] = React.useState(null);
+    const [user, setUser] = React.useState({});
     React.useEffect(async () => {
         setUser(await fetchUser());
     }, []);

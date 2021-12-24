@@ -4,7 +4,8 @@ body {
 }
 
 .navbar {
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 5px 16px 0px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0px;
     display: flex;
@@ -12,6 +13,8 @@ body {
     align-items: center;
     color: white;
     z-index: 3;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 .top-section {
@@ -110,7 +113,7 @@ header {
 
 .autocomplete-items div {
     padding: 10px;
-    cursor: pointer; 
+    cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
 }
