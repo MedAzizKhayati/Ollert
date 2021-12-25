@@ -39,11 +39,11 @@ router.post('/create', hashPassword, async (req, res) => {
             if (users.length == 0) {
                 db.promise().query(`
                 INSERT INTO USERS (username, email, password, picture) VALUES
-                ('${username}', '${email}', '${password}', '${__dirname + process.env.DEFAULT_PROFILE_PICTURE}')`
+                ('${username}', '${email}', '${password}', '${process.env.DEFAULT_PROFILE_PICTURE}')`
                 );
-                res.status(201).send({ msg: 'User Created' });
+                res.status(201).send({ success: 'User Created' });
             } else {
-                res.status(401).send({ msg: 'Email/username already in use. Please use another information.' });
+                res.send({ error: 'Email/username already in use. Please use another information.' });
             }
         } catch (err) {
             console.log(err);
@@ -179,7 +179,7 @@ router.post('/login', async (req, res) => {
             res.status(500).send(err.message);
         }
     } else {
-        res.status(401).send({ msg: 'Please enter non empty fields.' });
+        res.send({ error: 'Please enter non empty fields.' });
     }
 })
 

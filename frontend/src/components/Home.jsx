@@ -29,7 +29,7 @@ const Home = () => {
 
     return (
         <div id='Home' className='container'>
-            <h1 style={{color: 'white'}}>Welcome to Ollert</h1>
+            <h1 className="title" style={{textAlign: "center", color: 'white'}}>Welcome to Ollert</h1>
             <h2 style={{color: 'white'}}>Simulation</h2>
             <p style={{color: 'white'}}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vitae suscipit velit. Praesent sit amet nisl bibendum, sollicitudin ligula sit amet, dignissim massa. In at ligula libero. Quisque vitae quam orci. Duis auctor, enim eu convallis vulputate, enim velit auctor purus, id mattis leo libero at dolor. Aliquam quis facilisis purus. Nam quis erat vel nibh suscipit efficitur at in magna. Pellentesque condimentum, mi sit amet porttitor gravida, enim nibh fringilla erat, sit amet bibendum tellus odio eget nisl. Quisque maximus magna tortor, a faucibus nibh bibendum eu. In consequat, nisl sed ultrices convallis, erat dolor suscipit ante, vel ornare arcu nisi sit amet lorem. Vestibulum ipsum velit, finibus nec nibh sed, placerat fringilla nisl. Nunc ultrices nisl eu rhoncus sagittis. Praesent cursus arcu neque, a cursus sem aliquam vel.
