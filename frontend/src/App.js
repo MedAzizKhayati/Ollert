@@ -2,7 +2,7 @@ import Login from './components/LoginPage';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import Navbar from './components/Navbar';
-import Projects from './components/ProjectsPage';
+import Projects from './components/Projects';
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
@@ -30,6 +30,7 @@ function App() {
             <Navbar user={user}/>
             <Routes>
                 <Route path="/" element={<Home user={user} />} />
+                <Route path="/projects" element={<Projects user={user} />} />
                 <Route path="/home" element={<Home user={user} />} />
                 <Route path="/profile" element={<Profile user={user} />} />
             </Routes>

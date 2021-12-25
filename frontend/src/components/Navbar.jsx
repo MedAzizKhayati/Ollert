@@ -55,7 +55,7 @@ const Navbar = (props) => {
             </a>
             <div className="navbar-links">
                 <ul className="nav-area">
-                    <li className="navbar-list"><a className="cool-link">Projects</a></li>
+                    <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/projects')}>Projects</a></li>
                     <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/home')}>Home</a></li>
                     <li className="navbar-list">
                         <a className="title">

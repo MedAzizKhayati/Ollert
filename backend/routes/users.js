@@ -222,7 +222,7 @@ router.get('/profilePicture/:id', async (req, res) => {
             if(user.length)
                 return res.sendFile(path.resolve(user[0].picture))
 
-            return res.send({ msg: 'User id is not existant'});
+            return res.send({ error: 'User id is not existant'});
         }).catch(err => res.send({ msg: err.msg}))
 })
 

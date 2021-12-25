@@ -56,7 +56,7 @@ mainRouter.use('/tasks', tasksRoute);
 // Default route, used for testing if the application is reachable
 // It should return OK to the client
 mainRouter.get('/', (req, res) => {
-    res.send(200);
+    res.sendStatus(200);
 })
 
 // Starting the serving and listening on port
