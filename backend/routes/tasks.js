@@ -56,7 +56,7 @@ router.get('/project/todo/:id', async (req, res) => {
     }
 })
 
-// This route will return all todo tasks from a project given by id
+// This route will return all doing tasks from a project given by id
 router.get('/project/doing/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
@@ -67,7 +67,7 @@ router.get('/project/doing/:id', async (req, res) => {
     }
 })
 
-// This route will return all todo tasks from a project given by id
+// This route will return all done tasks from a project given by id
 router.get('/project/done/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
