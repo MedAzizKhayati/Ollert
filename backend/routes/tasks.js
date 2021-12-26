@@ -49,7 +49,7 @@ router.get('/project/:id', async (req, res) => {
 router.get('/project/todo/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
-        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'TODO' ;`))[0];
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND state = 'TODO' ;`))[0];
         res.json(tasks);
     } catch (err) {
         res.status(500).send(err.message);
@@ -60,7 +60,7 @@ router.get('/project/todo/:id', async (req, res) => {
 router.get('/project/doing/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
-        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'DOING' ;`))[0];
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND state = 'DOING' ;`))[0];
         res.json(tasks);
     } catch (err) {
         res.status(500).send(err.message);
@@ -71,7 +71,7 @@ router.get('/project/doing/:id', async (req, res) => {
 router.get('/project/done/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
-        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'DONE' ;`))[0];
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND state = 'DONE' ;`))[0];
         res.json(tasks);
     } catch (err) {
         res.status(500).send(err.message);
