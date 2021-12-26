@@ -45,6 +45,40 @@ router.get('/project/:id', async (req, res) => {
     }
 })
 
+// This route will return all todo tasks from a project given by id
+router.get('/project/todo/:id', async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'TODO' ;`))[0];
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
+
+// This route will return all todo tasks from a project given by id
+router.get('/project/doing/:id', async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'DOING' ;`))[0];
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
+
+// This route will return all todo tasks from a project given by id
+router.get('/project/done/:id', async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        tasks = (await db.promise().query(`SELECT * FROM tasks where id_project = ${id} AND status = 'DONE' ;`))[0];
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+})
+
+
 
 // This route, when called, will return the list of the all tasks in the database
 router.get('/list', async (req, res) => {
@@ -88,6 +122,55 @@ router.post('/create', nextIfManager, async (req, res) => {
         }
     } else {
         res.status(401).send({ msg: 'Please enter title and id_project and state.' });
+    }
+});
+
+router.put('/updateuser', nextIfManager, async (req, res) => {
+    const { id_task , id_user } = req.body;
+    if(!id_user)
+        id_user = null ;
+    if (id_task) {
+        try {
+            verification = (await db.promise().query(`
+            select * from project_member WHERE id_user = '${id_user}' AND
+                id_project IN ( select id_project FROM tasks WHERE id =  '${id_task}' ) ;
+             `
+            ))[0];
+            if(verification.length == 0)
+            {
+                res.status(401).send({ msg: 'user is not in project.' });
+
+            }
+            else{
+                db.promise().query(`
+            UPDATE tasks set id_user = '${id_user}' WHERE id =  '${id_task}' `
+            );
+            res.status(201).send({ msg: 'task user updated' });
+        }
+            
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(err.message);
+        }
+    } else {
+        res.status(401).send({ msg: 'Please enter id_task and id_user.' });
+    }
+});
+
+router.put('/updatestate', nextIfManager, async (req, res) => {
+    const { id_task , state } = req.body;
+    if (id_task && ['TODO', 'DOING', 'DONE'].includes(state)) {
+        try {
+            db.promise().query(`
+            UPDATE tasks set state = '${state}' WHERE id =  '${id_task}' `
+            );
+            res.status(201).send({ msg: 'task state updated' });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(err.message);
+        }
+    } else {
+        res.status(401).send({ msg: 'Please enter id_task and state.' });
     }
 });
 
