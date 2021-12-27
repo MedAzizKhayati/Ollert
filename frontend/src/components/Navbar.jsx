@@ -34,7 +34,6 @@ const Navbar = (props) => {
     return (
         <nav className="navbar" style={{ position: 'sticky' }}>
             <div className="brand-title">
-
                 <form className="form-inline autocomplete" autoComplete="off" onChange={handleSearch}>
                     <input name="user" className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                     <div className="autocomplete-items">
@@ -48,11 +47,6 @@ const Navbar = (props) => {
                     </div>
                 </form>
             </div>
-            <a href="#" className="toggle-button">
-                <span className="bar"></span>
-                <span className="bar"></span>
-                <span className="bar"></span>
-            </a>
             <div className="navbar-links">
                 <ul className="nav-area">
                     <li className="navbar-list"><a className="cool-link" onClick={() => navigate('/projects')}>Projects</a></li>

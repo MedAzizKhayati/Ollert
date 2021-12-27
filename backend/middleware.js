@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 // DO NOT CHANGE, UNLESS YOU KNOW WHAT YOU'RE DOING !!!
 const SALT_ROUNDS = 10;
-const PATHS_NO_AUTHENTICATION = ['/api/users/login', '/api/users/create']
+const PATHS_NO_AUTHENTICATION = ['/api/users/login', '/api/users/create', '/api']
 
 // login middleware
 const nextIfAuthenticated = async (req, res, next) => {

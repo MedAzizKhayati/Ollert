@@ -29,6 +29,13 @@
   backdrop-filter: blur(10px);
 }
 
+.brand-title{
+  display: flex;
+  column-gap: 50px;
+  margin-left: 20px;
+}
+
+
 .navbar-list {
   display: inline-block;
   padding: 0;

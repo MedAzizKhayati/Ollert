@@ -1,0 +1,27 @@
+.projects svg {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: 65px;
+    height: 65px;
+    fill: white;
+    animation: glow 2000ms linear infinite 2000ms;
+    transition: .3s;
+    cursor: pointer;
+    @keyframes glow {
+        40% {
+            filter: drop-shadow(0 0 35px #fff);
+        }
+    }
+}
+.projects svg:hover{
+    transform: scale(1.2);
+}
+
+.projlink{
+    text-decoration: none;
+}
+
+.projlink:hover{
+    background-color : rgba(96, 109, 121, 0.24) ;
+}

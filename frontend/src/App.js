@@ -3,6 +3,7 @@ import Home from './components/Home';
 import Profile from './components/Profile';
 import Navbar from './components/Navbar';
 import Projects from './components/Projects';
+import CreateProject from './components/CreateProject';
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/home" element={<Home user={user} />} />
                 <Route path="/profile" element={<Profile user={user} />} />
                 <Route path="/projects/:id/add" element={<CreateTask user={user} />} />
+                <Route path="/projects/create" element={<CreateProject user={user} />} />
+                <Route path="/profile" element={<Profile user={user} />} />       
             </Routes>
         </Router>
     );
