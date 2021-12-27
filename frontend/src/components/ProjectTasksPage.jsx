@@ -3,11 +3,16 @@ import '../style/ProjectTasksPage.css';
 import TaskCard from './TaskCard' ;
 import { fetchProjectTasks } from "../api/Tasks";
 import axios from 'axios';
+import {useParams} from "react-router-dom";
 
 const ProjectTasks = (props) => {
-    const [project,setProject] = React.useState(window.location.pathname.split("/").at(-1)) ;
+    const [project,setProject] = React.useState(useParams().id) ;
     //setProject(window.location.pathname.split("/").at(-1)) ;
 
+    React.useEffect(() =>{
+        setProject(window.location.pathname.split("/").at(-1));
+    }, [useParams()]);
+    
     const [title, setTtitle] = React.useState("Title");
     const [description, setDescription] = React.useState("Description");
     
@@ -26,7 +31,7 @@ const ProjectTasks = (props) => {
                     <TaskCard key={task.id} title={task.title} 
                         description={task.description} iduser={task.id_user} color = "bg-danger" />)
             );
-        }) ;
+        });
         axios.get('/api/tasks/project/doing/'+project).then((response) => {
             setDoing(
                 response.data.map(task =>
@@ -45,7 +50,7 @@ const ProjectTasks = (props) => {
             setTtitle(response.data['name']) ;
             setDescription(response.data["description"]) ;
         }) ;
-    }, []);
+    }, [project]);
 
     return (
         <div className="cont">
