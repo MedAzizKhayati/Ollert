@@ -1,6 +1,7 @@
 import React from 'react';
 import '../style/Projects.scss';
 import Project from './Project';
+import {Link} from 'react-router-dom';
 import { fetchProjects } from '../api/projects';
 import { fetchUser } from '../api/users';
 import { useNavigate } from 'react-router';
@@ -9,12 +10,13 @@ const Projects = (props) => {
     const rowCount = 10;
     const navigate = useNavigate();
     const [projects, setProjects] = React.useState([]);
+
     const [page, setPage] = React.useState(1);
     const [user, setUser] = React.useState(props.user);
     React.useEffect(async () => {
         fetchProjects(rowCount, page).then(projects => {
             setProjects(projects.map(project =>
-                <Project key={project.id} project={project} />))
+                <Link className='projlink' to={"/projects/"+project.id}> <Project key={project.id} project={project} /> </Link>))
         });
         fetchUser().then(user => setUser(user));
     }, []);

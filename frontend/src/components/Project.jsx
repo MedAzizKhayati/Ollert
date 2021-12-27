@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import '../style/Project.scss';
 import { fetchProjectMembers, fetchProjectTasks } from '../api/projects';

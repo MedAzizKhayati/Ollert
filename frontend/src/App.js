@@ -8,6 +8,8 @@ import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { fetchUser }  from './api/users';
+import ProjectTasks from './components/ProjectTasksPage';
+import CreateTask from './components/CreateTaskPage';
 
 
 function App() {
@@ -32,8 +34,11 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home user={user} />} />
                 <Route path="/projects" element={<Projects user={user} />} />
-                <Route path="/projects/create" element={<CreateProject user={user} />} />
+                <Route path="/Projects/:id" element={<ProjectTasks user={user} />} />
                 <Route path="/home" element={<Home user={user} />} />
+                <Route path="/profile" element={<Profile user={user} />} />
+                <Route path="/projects/:id/add" element={<CreateTask user={user} />} />
+                <Route path="/projects/create" element={<CreateProject user={user} />} />
                 <Route path="/profile" element={<Profile user={user} />} />       
             </Routes>
         </Router>
