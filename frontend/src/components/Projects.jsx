@@ -2,6 +2,7 @@ import React from 'react';
 import '../style/ProjectsPage.css';
 import Project from './Project';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 
 const Projects = () => {
@@ -12,7 +13,7 @@ const Projects = () => {
         axios.get('/api/projects/list/' + rowCount + '/' + 1).then((response) => {
             setProjects(
                 response.data.map(project =>
-                    <Project key={project.id} project={project} />)
+                    <Link className='projlink' to={"/projects/"+project.id}> <Project key={project.id} project={project} /> </Link>)
             );
         })
     }, []);
