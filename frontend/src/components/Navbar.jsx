@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import '../style/Navbar.scss';
 import { useNavigate } from 'react-router-dom';
-
+import {Link} from 'react-router-dom';
 
 const Navbar = (props) => {
     const navigate = useNavigate();
@@ -38,11 +38,11 @@ const Navbar = (props) => {
                     <input name="user" className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                     <div className="autocomplete-items">
                         {query.map(project =>
-                            <div key={project.name}>
-                                <strong>{project.name.slice(0, searchWord.length)}</strong>
-                                {project.name.slice(searchWord.length)}
-                                <input type='hidden' className="autocomplete-active" value={project.name} />
-                            </div>)
+                                <div key={project.name} onClick={() => navigate("/projects/" + project.id)}>
+                                    <strong>{project.name.slice(0, searchWord.length)}</strong>
+                                    {project.name.slice(searchWord.length)}
+                                </div>
+                        )
                         }
                     </div>
                 </form>

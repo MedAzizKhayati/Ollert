@@ -20,8 +20,11 @@
 
 .projlink{
     text-decoration: none;
+    transition: .3s;
+    border-radius: 10px;
 }
 
 .projlink:hover{
     background-color : rgba(96, 109, 121, 0.24) ;
+    transform: scale(1.03);
 }
