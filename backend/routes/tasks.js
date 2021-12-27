@@ -126,7 +126,7 @@ router.post('/create', nextIfManager, async (req, res) => {
 });
 
 router.put('/updateuser', nextIfManager, async (req, res) => {
-    const { id_task , id_user } = req.body;
+    let { id_task , id_user } = req.body;
     if(!id_user)
         id_user = null ;
     if (id_task) {
@@ -136,15 +136,20 @@ router.put('/updateuser', nextIfManager, async (req, res) => {
                 id_project IN ( select id_project FROM tasks WHERE id =  '${id_task}' ) ;
              `
             ))[0];
-            if(verification.length == 0)
+            if(verification.length == 0 && id_user != null)
             {
                 res.status(401).send({ msg: 'user is not in project.' });
 
             }
             else{
-                db.promise().query(`
-            UPDATE tasks set id_user = '${id_user}' WHERE id =  '${id_task}' `
-            );
+                if(id_user == null)
+                    db.promise().query(`
+                        UPDATE tasks set id_user = NULL WHERE id =  '${id_task}' `
+                    );
+                else
+                    db.promise().query(`
+                    UPDATE tasks set id_user = '${id_user}' WHERE id =  '${id_task}' `
+                    );
             res.status(201).send({ msg: 'task user updated' });
         }
             
