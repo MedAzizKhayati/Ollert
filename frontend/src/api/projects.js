@@ -1,16 +1,35 @@
 import axios from 'axios';
 
-const fetchProject = async () => {
-    let Project;
-    /*
-    await axios.get('/api/')
-        .then((response) => {
-        if (response.data.project) {
-            Project = (response.data.project);
-        }
-    })
-    */
-    return Project;
+const fetchProjects = async (rowCount, page) => {
+    let projects = [];
+    await axios.get('/api/projects/list/' + rowCount + '/' + page).then((response) => {
+            projects = response.data;
+    });
+    return projects;
 }
 
-export {fetchProject}
+const fetchProjectMembers = async id => {
+    let users = [];
+    await axios.get('/api/projects/' + id + '/users').then((response) => {
+        users = response.data;
+    }).catch((error) => {
+        console.log(error);
+    })
+    return users;
+}
+
+const fetchProjectTasks = async id => {
+    let tasks = [];
+    await axios.get('/api/tasks/project/' + id).then(response => {
+        tasks = response.data;
+    }).catch((error) => {
+        console.log(error);
+    });
+    return tasks;
+}
+
+export {
+    fetchProjects,
+    fetchProjectMembers,
+    fetchProjectTasks
+}

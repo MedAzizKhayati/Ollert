@@ -35,6 +35,7 @@ const Profile = (props) => {
     return (
         <div className="outer" >
             <div className="inner">
+            <h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
                 <form onChange={handleFormChange}>
                     <div className="form-row">
                         <div className="form-group">

@@ -1,32 +1,29 @@
 import axios from 'axios';
 import React from 'react';
 import '../style/Project.scss';
-
+import { fetchProjectMembers, fetchProjectTasks } from '../api/projects';
 
 const ProjectEntry = (props) => {
-
+    const oneDay = 24 * 3600 * 1000;
     const [project, setProject] = React.useState(props.project);
-    const [status, setStatus] = React.useState({ left: 0, completed: 0, percentage: 5, daysLeft: 0})
-    const [members, setMembers] = React.useState([])
+    const [status, setStatus] = React.useState({ left: 0, completed: 0, percentage: 0, daysLeft: 0})
+    const [members, setMembers] = React.useState([]);
+
     React.useEffect(async () => {
-        axios.get('/api/projects/' + project.id + '/users').then((response) => {
-            setMembers(response.data);
-        }).catch((error) => {
-            console.log(error);
-        })
-        axios.get('/api/tasks/project/' + project.id).then((response) => {
-            const tasks = response.data;
+        fetchProjectMembers(project.id)
+        .then(members => setMembers(members));
+
+        fetchProjectTasks(project.id)
+        .then(tasks => {
             let status = {left: 0, completed: 0};
             tasks.forEach(task => {
                 task.state == 'DONE' ? status.completed++ : status.left++;
             });
             status.percentage = status.completed / (status.completed + status.left) * 100;
-            const oneDay = 24 * 3600 * 1000;
             status.daysLeft = Math.floor((new Date(project.deadline).getTime() - new Date().getTime()) / oneDay);
             setStatus(status);
-        }).catch((error) => {
-            console.log(error);
-        })
+        });
+        
     }, [])
 
 
