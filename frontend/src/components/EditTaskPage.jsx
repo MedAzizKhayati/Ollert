@@ -6,7 +6,7 @@ import { fetchUser, queryUsers } from '../api/users';
 import AsyncSelect from 'react-select';
 import makeAnimated from 'react-select/animated';
 
-const CreateTask = (props) => {
+const EditTask = (props) => {
     const navigate = useNavigate();
     const animatedComponents = makeAnimated();
     const today = new Date().toISOString().split("T")[0];
@@ -15,11 +15,32 @@ const CreateTask = (props) => {
     const [query, setQuery] = React.useState('');
     const [user, setUser] = React.useState(props.user);
     const [member, setMember] = React.useState();
-    const [project,setProject] = React.useState(window.location.pathname.split("/").at(-2));
+    const [project,setProject] = React.useState(window.location.pathname.split("/").at(-3));
+    const [taskid, setTaskid] = React.useState(window.location.pathname.split("/").at(-1));
     
     const [task, setTask] = React.useState({id_project:project , deadline: today});
     const [flash, setFlash] = React.useState(false);
     const [flashmsg, setFlashmsg] = React.useState("");
+
+    const [data, setData] = React.useState({});
+    
+    React.useEffect( () => {
+        const init = async e => {
+            await axios.get('/api/tasks/'+taskid)
+                .then((response) => {
+                    setData(response.data) ;
+                }) ;
+            await axios.get('/api/users/'+data["id_user"])
+                .then((response) => {
+                    
+                    setMember(response.data[0]["username"]) ;
+                }).catch(e=>{}) ;
+            }
+        init() ;
+    },[]);
+
+    if(data["id_project"] != project)
+        navigate("/projects/"+project) ;
 
     React.useEffect(() => {
         fetchUser().then(user => {
@@ -31,9 +52,8 @@ const CreateTask = (props) => {
     });
 
     const onFormSubmit = async e => {
-        console.log(task) ;
         e.preventDefault();
-        await axios.post('/api/tasks/create/',task).then((response) => {
+        await axios.put('/api/tasks/updatetask/',task).then((response) => {
             if (response.status == 201)
                 setTimeout(() => navigate('/projects/'+project), 300) ;
             setFlash(true)
@@ -48,6 +68,7 @@ const CreateTask = (props) => {
         if (e.target.name)
             temp[e.target.name] = e.target.value;
         temp["user"] = member;
+        temp["id_task"] = taskid ;
         temp["state"] = document.querySelector(".options").selectedOptions[0].text ;
         setTask(temp);
     }
@@ -68,14 +89,22 @@ const CreateTask = (props) => {
         return query;
     }
 
+    let day ;
+    try {
+        day = data["deadline"].split("T")[0] ;
+    } catch (error) {
+        day = null ;
+    }
+
+
     return (
         <div className="outer" >
             <div className="inner">
-                <h1 style={{ textAlign: 'center' }}>Add Task</h1>
+                <h1 style={{ textAlign: 'center' }}>Edit Task</h1>
                 <form onChange={onFormChange}>
                     <div className="form-group">
                         <label >Task Name</label>
-                        <input type="text" name="title" className="form-control" placeholder="Ollert" />
+                        <input type="text" name="title" className="form-control" placeholder={data["title"]} />
                     </div>
                     <div className="form-group">
                         <label>Task Project</label>
@@ -85,13 +114,13 @@ const CreateTask = (props) => {
                         <label >Task Description</label>
                         <textarea
                             name="description" className="form-control" rows="3"
-                            placeholder="example : Create an add Task page"
+                            placeholder={(data["description"])}
                         ></textarea>
                     </div>
                     <div className="form-group">
                         <label >Task Deadline</label>
                         <input type="date" min={today}
-                            defaultValue={today} name="deadline" className="form-control" />
+                            defaultValue={day} name="deadline" className="form-control" />
                     </div>
                     <div className="form-group">
                         <label >Task state</label>
@@ -104,6 +133,7 @@ const CreateTask = (props) => {
                     <div className="form-group">
                         <label>User responsible for task</label>
                         <AsyncSelect
+                            placeholder={member}
                             onInputChange={handleInputChange}
                             onChange={selected => setMember(selected.value)}
                             components={animatedComponents}
@@ -114,7 +144,7 @@ const CreateTask = (props) => {
                     </div>
                     <br />
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <button onClick={onFormSubmit} className="btn btn-primary">Add Task</button>
+                        <button onClick={onFormSubmit} className="btn btn-primary">Confirm</button>
                     </div>
                     {/* {flash.success ?
                         <div className="alert alert-success" role="alert">
@@ -135,4 +165,4 @@ const CreateTask = (props) => {
 
 }
 
-export default CreateTask;
+export default EditTask;
