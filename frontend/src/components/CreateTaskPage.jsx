@@ -13,21 +13,44 @@ const CreateTask = (props) => {
 
     const [options, setOptions] = React.useState([]);
     const [query, setQuery] = React.useState('');
-    const [task, setTask] = React.useState({});
     const [user, setUser] = React.useState(props.user);
     const [member, setMember] = React.useState();
     const [project,setProject] = React.useState(window.location.pathname.split("/").at(-2));
-    const [flash, setFlash] = React.useState({});
     
+    const [task, setTask] = React.useState({id_project:project , deadline: today});
+    const [flash, setFlash] = React.useState(false);
+    const [flashmsg, setFlashmsg] = React.useState("");
 
     React.useEffect(() => {
         fetchUser().then(user => {
             if (user && user.role == 'CHEF')
                 setUser(user)
             else
-                navigate('/Tasks')
+                navigate('/Projects/'+project) ;
         });
     });
+
+    const onFormSubmit = async e => {
+        console.log(task) ;
+        e.preventDefault();
+        await axios.post('/api/tasks/create/',task).then((response) => {
+            if (response.status == 201)
+                setTimeout(() => navigate('/projects/'+project), 300) ;
+            setFlash(true)
+            setFlashmsg(response.data["msg"])
+        }).catch((err) => {
+            setFlash(true)
+            setFlashmsg("An error has occured")
+        })
+    }
+    const onFormChange = e => {
+        let temp = task;
+        if (e.target.name)
+            temp[e.target.name] = e.target.value;
+        temp["user"] = member;
+        temp["state"] = document.querySelector(".options").selectedOptions[0].text ;
+        setTask(temp);
+    }
 
     /* This Method is called to change the drop options for the search field of the user */
     const loadOptions = async (query) => {
@@ -49,10 +72,10 @@ const CreateTask = (props) => {
         <div className="outer" >
             <div className="inner">
                 <h1 style={{ textAlign: 'center' }}>Add Task</h1>
-                <form >
+                <form onChange={onFormChange}>
                     <div className="form-group">
                         <label >Task Name</label>
-                        <input type="text" name="name" className="form-control" placeholder="Ollert" />
+                        <input type="text" name="title" className="form-control" placeholder="Ollert" />
                     </div>
                     <div className="form-group">
                         <label>Task Project</label>
@@ -72,10 +95,10 @@ const CreateTask = (props) => {
                     </div>
                     <div className="form-group">
                         <label >Task state</label>
-                        <select className="form-control" name="state">
-                            <option>Todo</option>
-                            <option>Doing</option>
-                            <option>Done</option>
+                        <select className="form-control options" name="state">
+                            <option>TODO</option>
+                            <option>DOING</option>
+                            <option>DONE</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -89,15 +112,19 @@ const CreateTask = (props) => {
                             options={options}
                         />
                     </div>
-                    {flash.success ?
+                    <br />
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <button onClick={onFormSubmit} className="btn btn-primary">Add Task</button>
+                    </div>
+                    {/* {flash.success ?
                         <div className="alert alert-success" role="alert">
                             {flash.success}
                         </div>
                         : null
-                    }
-                    {flash.error ?
+                    } */}
+                    {flash ?
                         <div className="alert alert-danger" role="alert">
-                            {flash.error}
+                            {flashmsg}
                         </div>
                         : null
                     }
