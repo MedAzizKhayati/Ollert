@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import Projects from './components/Projects';
 import CreateProject from './components/CreateProject';
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { fetchUser }  from './api/users';
 import ProjectTasks from './components/ProjectTasksPage';

@@ -45,7 +45,11 @@ const ProjectEntry = (props) => {
                     <div className="info">
                         <span>{status.left} <br /> Tasks left</span>
                         <span>{status.completed} <br /> Tasks completed</span>
-                        <span>{status.daysLeft} <br /> Days left</span>
+                        {
+                            status.daysLeft >= 0 ?
+                            <span>{status.daysLeft} <br /> Days left</span>
+                            : <span>{status.daysLeft} <br />Deadline Passed</span>
+                        }
                     </div>
                     <div className="skill-bar" style={{ "--width": status.percentage + '%' }}></div>
                 </div>
