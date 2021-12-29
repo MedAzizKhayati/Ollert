@@ -179,6 +179,23 @@ router.put('/updatestate', nextIfManager, async (req, res) => {
     }
 });
 
+router.put('/updatetask', nextIfManager, async (req, res) => {
+    const { id_task , title ,  state , description , deadline , user } = req.body;
+    if (id_task && ['TODO', 'DOING', 'DONE'].includes(state)) {
+        try {
+            db.promise().query(`
+            UPDATE tasks set state = '${state}', title = '${title}', description = '${description}'
+            , deadline = '${deadline}' , id_user = '${user}' WHERE id =  '${id_task}' `
+            );
+            res.status(201).send({ msg: 'task state updated' });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(err.message);
+        }
+    } else {
+        res.status(401).send({ msg: 'Please enter id_task and state.' });
+    }
+});
 
 // This route returns info about a project from the database using the given id
 router.get('/:id', async (req, res, next) => {
@@ -193,6 +210,7 @@ router.get('/:id', async (req, res, next) => {
                 'description': task[0].description,
                 'deadline': task[0].deadline,
                 'id_task_manager': task[0].id_task_manager,
+                'id_project': task[0].id_project,
                 'id_user': task[0].id_user
             });
         } else {
