@@ -1,0 +1,37 @@
+.card {
+    text-align: left;
+    flex-grow: 0.6;
+    width: 48%;
+    margin: 1%;
+    float: left;
+}
+
+.card-body img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    float: right;
+}
+
+.card-body{
+    i{
+        font-size: 30px;
+        color: rgb(54, 54, 54);
+        transition: 0.3s;
+    }
+    i:hover{
+        transform: translateY(25px);
+        color: rgb(125, 125, 125);
+    }
+    .buttons{
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    p{
+        border: 1px solid rgb(50, 50, 50);
+        height: 125px;
+        border-radius: 5px;
+    }
+}

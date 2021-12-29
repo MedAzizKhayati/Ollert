@@ -111,15 +111,16 @@ router.post('/create', nextIfManager, async (req, res) => {
             const projectID = (await db.promise().query(`select id from projects ORDER BY id DESC LIMIT 1`))[0][0].id;
             if (users.length) {
                 users.forEach(id => {
-                    db.promise().query(`
-                        INSERT INTO project_member VALUES (${id}, ${projectID})
-                    `)
+                    if(id != id_project_manager)
+                        db.promise().query(`
+                            INSERT INTO project_member VALUES (${id}, ${projectID})
+                        `)
                 });
             }
             return res.status(201).send({ success: 'Project Created' });
         } catch (err) {
             console.log(err);
-            res.status(500).send(err.message);
+            res.send({error: 'Internal Server Error, please try again later.'});
         }
     } else {
         res.status(203).send({ error: 'Please enter name and type.' });

@@ -29,3 +29,23 @@
     background-color : rgba(96, 109, 121, 0.24) ;
     transform: scale(1.03);
 }
+
+.projects{
+    h1{
+        color: #fff;
+        text-align: center;
+        font-size: 50px;
+    }
+    nav{
+        border-bottom: 3px groove white;
+        //border-style: ;
+    }
+    i{
+        color: white;
+        font-size: 50px;
+        transition: .3s;
+    }
+    i:hover{
+        transform: scale(1.25)
+    }
+}
