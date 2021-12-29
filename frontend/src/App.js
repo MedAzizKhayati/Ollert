@@ -10,6 +10,7 @@ import React from 'react';
 import { fetchUser }  from './api/users';
 import ProjectTasks from './components/ProjectTasksPage';
 import CreateTask from './components/CreateTaskPage';
+import EditTask from './components/EditTaskPage';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/home" element={<Home user={user} />} />
                 <Route path="/profile" element={<Profile user={user} />} />
                 <Route path="/projects/:id/add" element={<CreateTask user={user} />} />
+                <Route path="/projects/:id/edit/:idtask" element={<EditTask user={user} />} />
                 <Route path="/projects/create" element={<CreateProject user={user} />} />
                 <Route path="/profile" element={<Profile user={user} />} />       
             </Routes>
