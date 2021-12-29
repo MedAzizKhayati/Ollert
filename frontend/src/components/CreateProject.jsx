@@ -11,7 +11,7 @@ const CreateProject = (props) => {
     const animatedComponents = makeAnimated();
     const today = new Date().toISOString().split("T")[0];
 
-    const [project, setProject] = React.useState({ type: 'Web Application' });
+    const [project, setProject] = React.useState({ type: 'Web Application', deadline: today});
     const [user, setUser] = React.useState(props.user);
     const [query, setQuery] = React.useState('');
     const [options, setOptions] = React.useState([]);

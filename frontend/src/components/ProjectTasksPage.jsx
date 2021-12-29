@@ -22,7 +22,7 @@ const ProjectTasks = (props) => {
 
     let createButton = <div></div>
     if(props.user["role"] === "CHEF")
-        createButton = <a href="#" class="btn btn-primary">Create task</a> ;
+        createButton = <a href={"/projects/"+ project.id + '/add'} class="btn btn-primary">Create task</a> ;
     
     React.useEffect(() => {
         axios.get('/api/tasks/project/todo/'+project).then((response) => {

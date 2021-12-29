@@ -17,6 +17,8 @@ const CreateTask = (props) => {
     const [user, setUser] = React.useState(props.user);
     const [member, setMember] = React.useState();
     const [project,setProject] = React.useState(window.location.pathname.split("/").at(-2));
+    const [flash, setFlash] = React.useState({});
+    
 
     React.useEffect(() => {
         fetchUser().then(user => {
@@ -47,7 +49,7 @@ const CreateTask = (props) => {
         <div className="outer" >
             <div className="inner">
                 <h1 style={{ textAlign: 'center' }}>Add Task</h1>
-                <form onChange={/* Call the method that creates the task for this project */}>
+                <form >
                     <div className="form-group">
                         <label >Task Name</label>
                         <input type="text" name="name" className="form-control" placeholder="Ollert" />
@@ -87,6 +89,18 @@ const CreateTask = (props) => {
                             options={options}
                         />
                     </div>
+                    {flash.success ?
+                        <div className="alert alert-success" role="alert">
+                            {flash.success}
+                        </div>
+                        : null
+                    }
+                    {flash.error ?
+                        <div className="alert alert-danger" role="alert">
+                            {flash.error}
+                        </div>
+                        : null
+                    }
                 </form>
             </div>
         </div>
