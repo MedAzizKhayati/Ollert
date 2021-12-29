@@ -28,21 +28,24 @@ const ProjectTasks = (props) => {
         axios.get('/api/tasks/project/todo/'+project).then((response) => {
             setTodo(
                 response.data.map(task =>
-                    <TaskCard key={task.id} title={task.title} 
-                        description={task.description} iduser={task.id_user} color = "bg-danger" />)
+                    <TaskCard key={task.id} id={task.id} project={project} title={task.title}
+                        state='TODO'
+                        description={task.description}  iduser={task.id_user} color = "bg-danger" />)
             );
         });
         axios.get('/api/tasks/project/doing/'+project).then((response) => {
             setDoing(
                 response.data.map(task =>
-                    <TaskCard key={task.id} title={task.title} 
+                    <TaskCard key={task.id} id={task.id} project={project} title={task.title}
+                        state='DOING'
                         description={task.description} iduser={task.id_user} color = "bg-secondary" />)
             );
         }) ;
         axios.get('/api/tasks/project/done/'+project).then((response) => {
             setDone(
                 response.data.map(task =>
-                    <TaskCard key={task.id} title={task.title} 
+                    <TaskCard key={task.id} id={task.id} project={project} title={task.title}
+                        state='DONE'
                         description={task.description} iduser={task.id_user} color = "bg-success" />)
             );
         }) ;

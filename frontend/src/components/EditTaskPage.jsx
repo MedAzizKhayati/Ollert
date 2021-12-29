@@ -32,7 +32,6 @@ const EditTask = (props) => {
                 }) ;
             await axios.get('/api/users/'+data["id_user"])
                 .then((response) => {
-                    
                     setMember(response.data[0]["username"]) ;
                 }).catch(e=>{}) ;
             }
@@ -69,7 +68,7 @@ const EditTask = (props) => {
             temp[e.target.name] = e.target.value;
         temp["user"] = member;
         temp["id_task"] = taskid ;
-        temp["state"] = document.querySelector(".options").selectedOptions[0].text ;
+        temp["state"] = document.querySelector(".options").selectedOptions[0].text;
         setTask(temp);
     }
 
@@ -104,17 +103,17 @@ const EditTask = (props) => {
                 <form onChange={onFormChange}>
                     <div className="form-group">
                         <label >Task Name</label>
-                        <input type="text" name="title" className="form-control" placeholder={data["title"]} />
+                        <input type="text" name="title" className="form-control" defaultValue={data["title"]} />
                     </div>
                     <div className="form-group">
                         <label>Task Project</label>
-                        <input type="text" name="project" className="form-control" placeholder={project} disabled />
+                        <input type="text" name="project" className="form-control" defaultValue={project} disabled />
                     </div>
                     <div className="form-group">
                         <label >Task Description</label>
                         <textarea
                             name="description" className="form-control" rows="3"
-                            placeholder={(data["description"])}
+                            defaultValue={(data["description"])}
                         ></textarea>
                     </div>
                     <div className="form-group">
@@ -133,7 +132,6 @@ const EditTask = (props) => {
                     <div className="form-group">
                         <label>User responsible for task</label>
                         <AsyncSelect
-                            placeholder={member}
                             onInputChange={handleInputChange}
                             onChange={selected => setMember(selected.value)}
                             components={animatedComponents}

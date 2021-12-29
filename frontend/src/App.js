@@ -11,7 +11,6 @@ import ProjectTasks from './components/ProjectTasksPage';
 import CreateTask from './components/CreateTaskPage';
 import EditTask from './components/EditTaskPage';
 
-
 function App() {
     const [user, setUser] = React.useState({});
     React.useEffect(async () => {

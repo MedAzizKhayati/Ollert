@@ -27,6 +27,15 @@ const fetchProjectTasks = async (projectID) => {
     return [todo,doing,done];
 }   
 
+const updateTaskState = (state) => {
+    let response;
+    axios.put('/api/tasks/updatestate', state).then((res) => {
+        response = response;
+    })
+    return response;
+}
+
 export {
-    fetchProjectTasks
+    fetchProjectTasks,
+    updateTaskState
 }
