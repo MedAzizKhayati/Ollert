@@ -1,12 +1,23 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { fetchUser } from '../api/users';
+import { fetchUser, queryUsers } from '../api/users';
+import { createProject } from '../api/projects';
+import AsyncSelect from 'react-select';
+import makeAnimated from 'react-select/animated';
+
 
 const CreateProject = (props) => {
     const navigate = useNavigate();
-    const [project, setProject] = React.useState({});
-    const [user, setUser] = React.useState(props.user);
+    const animatedComponents = makeAnimated();
     const today = new Date().toISOString().split("T")[0];
+
+    const [project, setProject] = React.useState({ type: 'Web Application' });
+    const [user, setUser] = React.useState(props.user);
+    const [query, setQuery] = React.useState('');
+    const [options, setOptions] = React.useState([]);
+    const [members, setMembers] = React.useState([]);
+    const [flash, setFlash] = React.useState({});
+
     React.useEffect(() => {
         fetchUser().then(user => {
             if (user && user.role == 'CHEF')
@@ -16,11 +27,44 @@ const CreateProject = (props) => {
         });
     });
 
+    const onFormSubmit = e => {
+        e.preventDefault();
+        createProject(project).then((response) => {
+            if (response.success)
+                setTimeout(() => navigate('/projects'), 1000)
+            setFlash(response)
+        })
+    }
+
+    const onFormChange = e => {
+        let temp = project;
+        if (e.target.name)
+            temp[e.target.name] = e.target.value;
+        temp["users"] = members;
+        temp["id_project_manager"] = user.id;
+        setProject(temp);
+    }
+
+    const loadOptions = async (query) => {
+        const options = (await queryUsers(query)).map(user => {
+            return { value: user.id, label: user.username }
+        });
+        setOptions(options);
+    }
+
+    const handleInputChange = (query) => {
+        query = query.replace(/\W/g, '');
+        setQuery(query);
+        if (query != '')
+            loadOptions(query);
+        return query;
+    }
+
     return (
         <div className="outer" >
             <div className="inner">
                 <h1 style={{ textAlign: 'center' }}>Create Project</h1>
-                <form>
+                <form onChange={onFormChange}>
                     <div className="form-group">
                         <label >Project Name</label>
                         <input type="text" name="name" className="form-control" placeholder="Ollert" />
@@ -42,13 +86,36 @@ const CreateProject = (props) => {
                     <div className="form-group">
                         <label >Project Deadline</label>
                         <input type="date" min={today}
-                            onChange={e => console.log(e.target.value)}
-                            value={today} name="deadline" className="form-control" />
+                            defaultValue={today} onChange={e => null} name="deadline" className="form-control" />
                     </div>
                     <div className="form-group">
                         <label >Project Members</label>
-                        <textarea className="form-control" rows="3"></textarea>
+                        <AsyncSelect
+                            onInputChange={handleInputChange}
+                            onChange={selected => setMembers(selected.map(member => member.value))}
+                            components={animatedComponents}
+                            isMulti
+                            cacheOptions
+                            className="basic-multi-select"
+                            options={options}
+                        />
                     </div>
+                    <br />
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <button onClick={onFormSubmit} className="btn btn-primary">Create Project</button>
+                    </div>
+                    {flash.success ?
+                        <div className="alert alert-success" role="alert">
+                            {flash.success}
+                        </div>
+                        : null
+                    }
+                    {flash.error ?
+                        <div className="alert alert-danger" role="alert">
+                            {flash.error}
+                        </div>
+                        : null
+                    }
                 </form>
             </div>
         </div>

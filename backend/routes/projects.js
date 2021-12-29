@@ -90,7 +90,7 @@ router.get('/list/:count/:page', async (req, res) => {
     if (count && page) {
         try {
             projects = (await db.promise().query(`
-                SELECT * FROM projects LIMIT ${count * (page - 1)},${count};
+                SELECT * FROM projects ORDER BY id DESC LIMIT ${count * (page - 1)},${count};
             `))[0];
             res.json(projects);
         } catch (err) {
@@ -101,20 +101,28 @@ router.get('/list/:count/:page', async (req, res) => {
 
 // This route, when called, will create a project in the database according to the body of the post request.
 router.post('/create', nextIfManager, async (req, res) => {
-    const { name, type, description, deadline, id_project_manager } = req.body;
+    const { name, type, description, deadline, id_project_manager, users } = req.body;
     if (name && type && id_project_manager) {
         try {
             db.promise().query(`
             INSERT INTO projects (name, type, description,deadline,id_project_manager) VALUES
-             ('${name.charAt(0).toUpperCase() + name.slice(1)}', '${type}', '${description}', '${deadline}', '${id_project_manager}')`
+             ('${name.charAt(0).toUpperCase() + name.slice(1)}', '${type}', '${description}', '${getSQLDate(deadline)}', '${id_project_manager}')`
             );
-            res.status(201).send({ msg: 'Project Created' });
+            const projectID = (await db.promise().query(`select id from projects ORDER BY id DESC LIMIT 1`))[0][0].id;
+            if (users.length) {
+                users.forEach(id => {
+                    db.promise().query(`
+                        INSERT INTO project_member VALUES (${id}, ${projectID})
+                    `)
+                });
+            }
+            return res.status(201).send({ success: 'Project Created' });
         } catch (err) {
             console.log(err);
             res.status(500).send(err.message);
         }
     } else {
-        res.status(401).send({ msg: 'Please enter name and type and id_project_manager.' });
+        res.status(203).send({ error: 'Please enter name and type.' });
     }
 });
 
@@ -185,6 +193,12 @@ const createRandomProject = async () => {
         return false;
     }
 }
+
+// This will transform a string into a date to pass to the database
+function getSQLDate(date) {
+    return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+}
+
 
 // This function will make a random Date
 function randomDateFromNow() {

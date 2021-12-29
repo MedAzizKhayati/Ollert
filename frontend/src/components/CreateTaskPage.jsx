@@ -2,13 +2,22 @@ import React from "react";
 import '../style/CreateTaskPage.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { fetchUser } from '../api/users';
+import { fetchUser, queryUsers } from '../api/users';
+import AsyncSelect from 'react-select';
+import makeAnimated from 'react-select/animated';
 
 const CreateTask = (props) => {
     const navigate = useNavigate();
-    const [Task, setTask] = React.useState({});
-    const [user, setUser] = React.useState(props.user);
+    const animatedComponents = makeAnimated();
     const today = new Date().toISOString().split("T")[0];
+
+    const [options, setOptions] = React.useState([]);
+    const [query, setQuery] = React.useState('');
+    const [task, setTask] = React.useState({});
+    const [user, setUser] = React.useState(props.user);
+    const [member, setMember] = React.useState();
+    const [project,setProject] = React.useState(window.location.pathname.split("/").at(-2));
+
     React.useEffect(() => {
         fetchUser().then(user => {
             if (user && user.role == 'CHEF')
@@ -17,13 +26,28 @@ const CreateTask = (props) => {
                 navigate('/Tasks')
         });
     });
-    const [project,setProject] = React.useState(window.location.pathname.split("/").at(-2)) ;
+
+    /* This Method is called to change the drop options for the search field of the user */
+    const loadOptions = async (query) => {
+        const options = (await queryUsers(query)).map(user => {
+            return { value: user.id, label: user.username }
+        });
+        setOptions(options);
+    }
+    /* This method is used as an event listener which gets fired when the user types something in the field of members */
+    const handleInputChange = (query) => {
+        query = query.replace(/\W/g, '');
+        setQuery(query);
+        if (query != '')
+            loadOptions(query);
+        return query;
+    }
 
     return (
         <div className="outer" >
             <div className="inner">
                 <h1 style={{ textAlign: 'center' }}>Add Task</h1>
-                <form>
+                <form onChange={/* Call the method that creates the task for this project */}>
                     <div className="form-group">
                         <label >Task Name</label>
                         <input type="text" name="name" className="form-control" placeholder="Ollert" />
@@ -42,8 +66,7 @@ const CreateTask = (props) => {
                     <div className="form-group">
                         <label >Task Deadline</label>
                         <input type="date" min={today}
-                            onChange={e => console.log(e.target.value)}
-                            value={today} name="deadline" className="form-control" />
+                            defaultValue={today} name="deadline" className="form-control" />
                     </div>
                     <div className="form-group">
                         <label >Task state</label>
@@ -54,8 +77,15 @@ const CreateTask = (props) => {
                         </select>
                     </div>
                     <div className="form-group">
-                        <label >User responsible for task</label>
-                        <input type="text" name="user" className="form-control" placeholder="Enter the user id or leave empty" />
+                        <label>User responsible for task</label>
+                        <AsyncSelect
+                            onInputChange={handleInputChange}
+                            onChange={selected => setMember(selected.value)}
+                            components={animatedComponents}
+                            cacheOptions
+                            className="basic-multi-select"
+                            options={options}
+                        />
                     </div>
                 </form>
             </div>

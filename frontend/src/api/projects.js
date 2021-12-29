@@ -3,7 +3,7 @@ import axios from 'axios';
 const fetchProjects = async (rowCount, page) => {
     let projects = [];
     await axios.get('/api/projects/list/' + rowCount + '/' + page).then((response) => {
-            projects = response.data;
+        projects = response.data;
     });
     return projects;
 }
@@ -28,8 +28,16 @@ const fetchProjectTasks = async id => {
     return tasks;
 }
 
+const createProject = async (project) => {
+    let response;
+    await axios.post('/api/projects/create', project)
+        .then(res => response = res.data)
+    return response;
+}
+
 export {
     fetchProjects,
     fetchProjectMembers,
-    fetchProjectTasks
+    fetchProjectTasks,
+    createProject
 }

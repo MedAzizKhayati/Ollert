@@ -7,6 +7,7 @@ const path = require('path');
 var fs = require('fs');
 const { route } = require('express/lib/application');
 const { send } = require('process');
+const res = require('express/lib/response');
 
 router = Router();
 
@@ -96,7 +97,6 @@ router.delete('/:id', async (req, res) => {
 
 
 
-
 // This route deletes users with ID's greater than the given ID
 router.delete('/delete-greater/:id', async (req, res) => {
     const id = parseInt(req.params.id);
@@ -112,6 +112,24 @@ router.delete('/delete-greater/:id', async (req, res) => {
         res.json({ 'msg': 'The ID is invalid.' });
     }
 });
+
+// This route will query users with their username
+router.get('/search/:query', async (req, res) => {
+    const query = req.params.query;
+    try {
+        let users = [];
+        if (query && query != ''){
+            users = (await db.promise().query(`
+            SELECT id, username FROM users 
+            WHERE username LIKE "${query}%"
+            LIMIT 7;`))[0];
+        }
+        return res.send(users);
+    } catch (err) {
+        res.status(500).json({ 'msg': err});
+    }
+})
+
 
 // This route, when called, will return the list of the all the users in the database
 router.get('/list', async (req, res) => {

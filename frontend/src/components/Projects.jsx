@@ -16,7 +16,7 @@ const Projects = (props) => {
     React.useEffect(async () => {
         fetchProjects(rowCount, page).then(projects => {
             setProjects(projects.map(project =>
-                <Link className='projlink' to={"/projects/"+project.id}> <Project key={project.id} project={project} /> </Link>))
+                <Link  key={project.id} className='projlink' to={"/projects/"+project.id}> <Project project={project} /> </Link>))
         });
         fetchUser().then(user => setUser(user));
     }, []);

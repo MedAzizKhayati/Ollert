@@ -11,6 +11,16 @@ const fetchUser = async () => {
     return user;
 }   
 
+const queryUsers = async (query) => {
+    let users = []
+    await axios.get('/api/users/search/'+query).then((response) => {
+        if (response.data)
+            users = response.data;
+    });
+    return users;
+}  
+
 export {
-    fetchUser
+    fetchUser,
+    queryUsers
 }

@@ -33,7 +33,7 @@ const nextIfManager = async (req, res, next) => {
     if(req.session.user.role == 'CHEF')
         next();
     else
-        res.json({msg: "Insufficient permissions."})
+        res.json({error: "Insufficient permissions."})
 }
 
 // Exporting the middlewares as a dictionary of middlewares

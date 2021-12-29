@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import '../style/Navbar.scss';
 import { useNavigate } from 'react-router-dom';
-import {Link} from 'react-router-dom';
+
 
 const Navbar = (props) => {
     const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Navbar = (props) => {
         window.location.reload();
     }
 
-    const handleSearch = (event) => {
+    const handleChange = (event) => {
         axios.get('/api/projects/search',
             {
                 params: {
@@ -31,17 +31,26 @@ const Navbar = (props) => {
         }).catch(err => console.log(err));
     }
 
+    const handleSearch = (event) => {
+        event.preventDefault();
+        if(query.length){
+            navigate("/projects/" + query[0].id);
+            setQuery([]);
+            event.target.value = '';
+        }
+    }
+
     return (
         <nav className="navbar" style={{ position: 'sticky' }}>
             <div className="brand-title">
-                <form className="form-inline autocomplete" autoComplete="off" onChange={handleSearch}>
-                    <input name="user" className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                <form className="form-inline autocomplete" autoComplete="off" onSubmit={handleSearch} onChange={handleChange}>
+                    <input  name="user" className="form-control mr-sm-2" type="search" placeholder="Search"/>
                     <div className="autocomplete-items">
                         {query.map(project =>
-                                <div key={project.name} onClick={() => navigate("/projects/" + project.id)}>
-                                    <strong>{project.name.slice(0, searchWord.length)}</strong>
-                                    {project.name.slice(searchWord.length)}
-                                </div>
+                            <div key={project.name} onClick={() => navigate("/projects/" + project.id)}>
+                                <strong>{project.name.slice(0, searchWord.length)}</strong>
+                                {project.name.slice(searchWord.length)}
+                            </div>
                         )
                         }
                     </div>
@@ -69,6 +78,7 @@ const Navbar = (props) => {
                     </div>
                 </ul>
             </div>
+
         </nav>
 
     );
